@@ -1,6 +1,7 @@
 import 'package:go_router/go_router.dart';
 
-import '../../features/home/presentation/pages/home_page.dart';
+import '../../features/shell/presentation/pages/shell_page.dart';
+import '../../features/wishlist/presentation/pages/wishlist_page.dart';
 
 class AppRouter {
   static final GoRouter router = GoRouter(
@@ -8,8 +9,13 @@ class AppRouter {
     routes: [
       GoRoute(
         path: '/',
-        name: 'home',
-        builder: (context, state) => const HomePage(),
+        name: 'shell',
+        builder: (context, state) => const ShellPage(),
+      ),
+      GoRoute(
+        path: '/wishlist',
+        name: 'wishlist',
+        builder: (context, state) => const WishlistPage(),
       ),
     ],
   );

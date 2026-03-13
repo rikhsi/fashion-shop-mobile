@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/constants/app_constants.dart';
-import '../../../../core/constants/app_strings.dart';
 import '../../../../core/di/injection.dart';
+import '../../../../core/l10n/app_localizations.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_text_styles.dart';
+import '../../../../shared/widgets/primary_button.dart';
 import '../bloc/login_bloc.dart';
 import '../widgets/agreement_text.dart';
-import '../widgets/auth_button.dart';
 import '../widgets/phone_input.dart';
 import 'otp_page.dart';
 
@@ -17,7 +18,6 @@ Future<bool?> showLoginBottomSheet(BuildContext context) {
     context: context,
     isScrollControlled: true,
     backgroundColor: Colors.transparent,
-    barrierColor: AppColors.bottomSheetBarrier,
     builder: (_) => BlocProvider(
       create: (_) => sl<LoginBloc>(),
       child: const _LoginBottomSheetShell(),
@@ -30,6 +30,8 @@ class _LoginBottomSheetShell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+
     return BlocListener<LoginBloc, LoginState>(
       listenWhen: (prev, curr) => prev.status != curr.status,
       listener: (context, state) {
@@ -43,17 +45,19 @@ class _LoginBottomSheetShell extends StatelessWidget {
               backgroundColor: AppColors.error,
               behavior: SnackBarBehavior.floating,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
               ),
-              margin: const EdgeInsets.all(16),
+              margin: const EdgeInsets.all(AppSpacing.base),
             ),
           );
         }
       },
       child: Container(
-        decoration: const BoxDecoration(
-          color: AppColors.surface,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        decoration: BoxDecoration(
+          color: scheme.surface,
+          borderRadius: const BorderRadius.vertical(
+            top: Radius.circular(AppSpacing.radiusXxl),
+          ),
         ),
         child: Padding(
           padding: EdgeInsets.only(
@@ -68,15 +72,10 @@ class _LoginBottomSheetShell extends StatelessWidget {
                 switchOutCurve: Curves.easeIn,
                 transitionBuilder: (child, animation) {
                   final isOtp = state.step == LoginStep.otp;
-                  final offset = isOtp
-                      ? Tween(
-                          begin: const Offset(1, 0),
-                          end: Offset.zero,
-                        )
-                      : Tween(
-                          begin: const Offset(-1, 0),
-                          end: Offset.zero,
-                        );
+                  final offset = Tween(
+                    begin: Offset(isOtp ? 1 : -1, 0),
+                    end: Offset.zero,
+                  );
                   return SlideTransition(
                     position: offset.animate(animation),
                     child: child,
@@ -112,38 +111,45 @@ class _PhoneScreenState extends State<_PhoneScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final tr = context.tr;
+
     return SingleChildScrollView(
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+        padding: const EdgeInsets.fromLTRB(
+          AppSpacing.xl, 0, AppSpacing.xl, AppSpacing.xl,
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             const _DragHandle(),
-            const SizedBox(height: 4),
-            _buildCloseRow(context),
-            const SizedBox(height: 16),
-            const Align(
+            const SizedBox(height: AppSpacing.xs),
+            _buildCloseRow(context, scheme),
+            const SizedBox(height: AppSpacing.base),
+            Align(
               alignment: Alignment.centerLeft,
               child: Text(
-                AppStrings.enterPhoneNumber,
-                style: AppTextStyles.headlineLarge,
+                tr.enterPhoneNumber,
+                style: AppTextStyles.displayMedium.copyWith(
+                  color: scheme.onSurface,
+                ),
               ),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: AppSpacing.xl),
             PhoneInput(
               controller: _phoneController,
-              onChanged: (value) {
-                context.read<LoginBloc>().add(LoginPhoneNumberChanged(value));
+              onChanged: (v) {
+                context.read<LoginBloc>().add(LoginPhoneNumberChanged(v));
               },
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: AppSpacing.xl),
             BlocBuilder<LoginBloc, LoginState>(
-              buildWhen: (prev, curr) =>
-                  prev.isPhoneValid != curr.isPhoneValid ||
-                  prev.status != curr.status,
+              buildWhen: (p, c) =>
+                  p.isPhoneValid != c.isPhoneValid ||
+                  p.status != c.status,
               builder: (context, state) {
-                return AuthButton(
-                  text: AppStrings.getCode,
+                return PrimaryButton(
+                  text: tr.getCode,
                   isLoading: state.status == LoginStatus.loading,
                   onPressed: state.isPhoneValid
                       ? () => context
@@ -153,37 +159,34 @@ class _PhoneScreenState extends State<_PhoneScreen> {
                 );
               },
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: AppSpacing.lg),
             AgreementText(
-              onPolicyTap: () => _openPrivacyPolicy(context),
+              onPolicyTap: () =>
+                  debugPrint('Open: ${AppConstants.dataPolicyUrl}'),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: AppSpacing.sm),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildCloseRow(BuildContext context) {
+  Widget _buildCloseRow(BuildContext context, ColorScheme scheme) {
     return Align(
       alignment: Alignment.centerRight,
-      child: IconButton(
-        onPressed: () => Navigator.of(context).pop(),
-        icon: const Icon(Icons.close, size: 22),
-        style: IconButton.styleFrom(
-          backgroundColor: AppColors.inputBackground,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
+      child: GestureDetector(
+        onTap: () => Navigator.of(context).pop(),
+        child: Container(
+          width: 36,
+          height: 36,
+          decoration: BoxDecoration(
+            color: scheme.outlineVariant,
+            borderRadius: BorderRadius.circular(AppSpacing.radiusSm + 2),
           ),
-          minimumSize: const Size(36, 36),
+          child: Icon(Icons.close, size: 20, color: scheme.onSurfaceVariant),
         ),
       ),
     );
-  }
-
-  void _openPrivacyPolicy(BuildContext context) {
-    // TODO: Open privacy policy URL via url_launcher
-    debugPrint('Open: ${AppConstants.dataPolicyUrl}');
   }
 }
 
@@ -193,12 +196,12 @@ class _DragHandle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 12, bottom: 4),
+      padding: const EdgeInsets.only(top: AppSpacing.md, bottom: AppSpacing.xs),
       child: Container(
         width: 40,
         height: 4,
         decoration: BoxDecoration(
-          color: AppColors.dragHandle,
+          color: Theme.of(context).colorScheme.outline,
           borderRadius: BorderRadius.circular(2),
         ),
       ),

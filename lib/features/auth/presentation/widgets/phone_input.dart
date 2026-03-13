@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../../../core/constants/app_constants.dart';
-import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_text_styles.dart';
 
 class PhoneInput extends StatelessWidget {
@@ -19,88 +19,72 @@ class PhoneInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+
     return Container(
-      height: 56,
+      height: AppSpacing.inputHeight,
       decoration: BoxDecoration(
-        color: AppColors.inputBackground,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.inputBorder),
+        color: scheme.outlineVariant,
+        borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+        border: Border.all(color: scheme.outline),
       ),
       child: Row(
         children: [
-          _CountryCodeBadge(),
-          _Divider(),
-          Expanded(child: _PhoneTextField(
-            controller: controller,
-            onChanged: onChanged,
-            enabled: enabled,
-          )),
+          Padding(
+            padding: const EdgeInsets.only(
+              left: AppSpacing.base,
+              right: AppSpacing.md,
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text('🇺🇿', style: TextStyle(fontSize: 20)),
+                const SizedBox(width: 6),
+                Text(
+                  AppConstants.defaultCountryCode,
+                  style: AppTextStyles.titleMedium.copyWith(
+                    color: scheme.onSurface,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Container(width: 1, height: 28, color: scheme.outline),
+          Expanded(
+            child: TextField(
+              controller: controller,
+              onChanged: onChanged,
+              enabled: enabled,
+              autofocus: true,
+              keyboardType: TextInputType.phone,
+              inputFormatters: [
+                FilteringTextInputFormatter.digitsOnly,
+                _PhoneMaskFormatter(),
+                LengthLimitingTextInputFormatter(12),
+              ],
+              style: AppTextStyles.bodyLarge.copyWith(
+                fontWeight: FontWeight.w500,
+                color: scheme.onSurface,
+                letterSpacing: 0.5,
+              ),
+              decoration: InputDecoration(
+                hintText: '00 000 00 00',
+                hintStyle: AppTextStyles.bodyLarge.copyWith(
+                  color: scheme.onSurfaceVariant,
+                ),
+                border: InputBorder.none,
+                enabledBorder: InputBorder.none,
+                focusedBorder: InputBorder.none,
+                disabledBorder: InputBorder.none,
+                filled: false,
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: AppSpacing.md,
+                  vertical: 14,
+                ),
+              ),
+            ),
+          ),
         ],
-      ),
-    );
-  }
-}
-
-class _CountryCodeBadge extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.only(left: 16, right: 12),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text('🇺🇿', style: TextStyle(fontSize: 20)),
-          SizedBox(width: 6),
-          Text(AppConstants.defaultCountryCode, style: AppTextStyles.countryCode),
-        ],
-      ),
-    );
-  }
-}
-
-class _Divider extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(width: 1, height: 28, color: AppColors.divider);
-  }
-}
-
-class _PhoneTextField extends StatelessWidget {
-  final TextEditingController controller;
-  final ValueChanged<String>? onChanged;
-  final bool enabled;
-
-  const _PhoneTextField({
-    required this.controller,
-    this.onChanged,
-    this.enabled = true,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return TextField(
-      controller: controller,
-      onChanged: onChanged,
-      enabled: enabled,
-      autofocus: true,
-      keyboardType: TextInputType.phone,
-      inputFormatters: [
-        FilteringTextInputFormatter.digitsOnly,
-        _PhoneMaskFormatter(),
-        LengthLimitingTextInputFormatter(12),
-      ],
-      style: AppTextStyles.bodyLarge.copyWith(
-        fontWeight: FontWeight.w500,
-        letterSpacing: 0.5,
-      ),
-      decoration: const InputDecoration(
-        hintText: '00 000 00 00',
-        border: InputBorder.none,
-        enabledBorder: InputBorder.none,
-        focusedBorder: InputBorder.none,
-        disabledBorder: InputBorder.none,
-        filled: false,
-        contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
       ),
     );
   }

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../core/constants/app_strings.dart';
-import '../../../../core/theme/app_colors.dart';
+import '../../../../core/l10n/app_localizations.dart';
+import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_text_styles.dart';
+import '../../../../shared/widgets/primary_button.dart';
 import '../bloc/login_bloc.dart';
-import '../widgets/auth_button.dart';
 import '../widgets/otp_input.dart';
 
 class OtpPage extends StatelessWidget {
@@ -13,128 +13,147 @@ class OtpPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final tr = context.tr;
+
     return SingleChildScrollView(
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+        padding: const EdgeInsets.fromLTRB(
+          AppSpacing.xl, 0, AppSpacing.xl, AppSpacing.xl,
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             const _DragHandle(),
-            const SizedBox(height: 4),
-            _buildHeader(context),
-            const SizedBox(height: 20),
-            const Align(
+            const SizedBox(height: AppSpacing.xs),
+            _buildHeader(context, scheme),
+            const SizedBox(height: AppSpacing.lg),
+            Align(
               alignment: Alignment.centerLeft,
               child: Text(
-                AppStrings.enterOtp,
-                style: AppTextStyles.headlineLarge,
+                tr.enterOtp,
+                style: AppTextStyles.displayMedium.copyWith(
+                  color: scheme.onSurface,
+                ),
               ),
             ),
-            const SizedBox(height: 8),
-            _buildSubtitle(),
-            const SizedBox(height: 32),
+            const SizedBox(height: AppSpacing.sm),
+            _buildSubtitle(scheme, tr),
+            const SizedBox(height: AppSpacing.xxl),
             OtpInput(
               onChanged: (otp) {
                 context.read<LoginBloc>().add(LoginOtpChanged(otp));
               },
               onCompleted: (_) {
-                context.read<LoginBloc>().add(const LoginVerifyOtpRequested());
+                context
+                    .read<LoginBloc>()
+                    .add(const LoginVerifyOtpRequested());
               },
             ),
-            const SizedBox(height: 24),
-            _buildResendTimer(),
-            const SizedBox(height: 24),
-            _buildConfirmButton(),
-            const SizedBox(height: 8),
+            const SizedBox(height: AppSpacing.xl),
+            _buildResendTimer(scheme, tr),
+            const SizedBox(height: AppSpacing.xl),
+            _buildConfirmButton(tr),
+            const SizedBox(height: AppSpacing.sm),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildHeader(BuildContext context) {
+  Widget _buildHeader(BuildContext context, ColorScheme scheme) {
     return Row(
       children: [
-        IconButton(
-          onPressed: () {
-            context.read<LoginBloc>().add(const LoginBackToPhoneRequested());
-          },
-          icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 18),
-          style: IconButton.styleFrom(
-            backgroundColor: AppColors.inputBackground,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
+        GestureDetector(
+          onTap: () => context
+              .read<LoginBloc>()
+              .add(const LoginBackToPhoneRequested()),
+          child: Container(
+            width: 36,
+            height: 36,
+            decoration: BoxDecoration(
+              color: scheme.outlineVariant,
+              borderRadius: BorderRadius.circular(AppSpacing.radiusSm + 2),
             ),
-            minimumSize: const Size(36, 36),
+            child: Icon(
+              Icons.arrow_back_ios_new_rounded,
+              size: 16,
+              color: scheme.onSurfaceVariant,
+            ),
           ),
         ),
         const Spacer(),
-        IconButton(
-          onPressed: () => Navigator.of(context).pop(),
-          icon: const Icon(Icons.close, size: 22),
-          style: IconButton.styleFrom(
-            backgroundColor: AppColors.inputBackground,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
+        GestureDetector(
+          onTap: () => Navigator.of(context).pop(),
+          child: Container(
+            width: 36,
+            height: 36,
+            decoration: BoxDecoration(
+              color: scheme.outlineVariant,
+              borderRadius: BorderRadius.circular(AppSpacing.radiusSm + 2),
             ),
-            minimumSize: const Size(36, 36),
+            child: Icon(
+              Icons.close,
+              size: 20,
+              color: scheme.onSurfaceVariant,
+            ),
           ),
         ),
       ],
     );
   }
 
-  Widget _buildSubtitle() {
+  Widget _buildSubtitle(ColorScheme scheme, AppLocalizations tr) {
     return BlocBuilder<LoginBloc, LoginState>(
-      buildWhen: (prev, curr) => prev.formattedPhone != curr.formattedPhone,
+      buildWhen: (p, c) => p.formattedPhone != c.formattedPhone,
       builder: (context, state) {
         return Align(
           alignment: Alignment.centerLeft,
           child: Text(
-            '${AppStrings.otpSubtitle}\n${state.formattedPhone}',
-            style: AppTextStyles.bodyMedium,
+            '${tr.otpSubtitle}\n${state.formattedPhone}',
+            style: AppTextStyles.bodyMedium.copyWith(
+              color: scheme.onSurfaceVariant,
+            ),
           ),
         );
       },
     );
   }
 
-  Widget _buildResendTimer() {
+  Widget _buildResendTimer(ColorScheme scheme, AppLocalizations tr) {
     return BlocBuilder<LoginBloc, LoginState>(
-      buildWhen: (prev, curr) =>
-          prev.resendTimerSeconds != curr.resendTimerSeconds,
+      buildWhen: (p, c) => p.resendTimerSeconds != c.resendTimerSeconds,
       builder: (context, state) {
         if (state.canResend) {
           return GestureDetector(
-            onTap: () {
-              context.read<LoginBloc>().add(const LoginResendOtpRequested());
-            },
+            onTap: () => context
+                .read<LoginBloc>()
+                .add(const LoginResendOtpRequested()),
             child: Text(
-              AppStrings.resendCode,
-              style: AppTextStyles.bodyMedium.copyWith(
-                color: AppColors.primary,
-                fontWeight: FontWeight.w600,
+              tr.resendCode,
+              style: AppTextStyles.titleSmall.copyWith(
+                color: scheme.primary,
               ),
             ),
           );
         }
-
         return Text(
-          '${AppStrings.resendCodeIn} ${state.timerDisplay}',
-          style: AppTextStyles.timer,
+          '${tr.resendCodeIn} ${state.timerDisplay}',
+          style: AppTextStyles.bodyMedium.copyWith(
+            color: scheme.onSurfaceVariant,
+          ),
         );
       },
     );
   }
 
-  Widget _buildConfirmButton() {
+  Widget _buildConfirmButton(AppLocalizations tr) {
     return BlocBuilder<LoginBloc, LoginState>(
-      buildWhen: (prev, curr) =>
-          prev.isOtpValid != curr.isOtpValid ||
-          prev.status != curr.status,
+      buildWhen: (p, c) =>
+          p.isOtpValid != c.isOtpValid || p.status != c.status,
       builder: (context, state) {
-        return AuthButton(
-          text: AppStrings.confirm,
+        return PrimaryButton(
+          text: tr.confirm,
           isLoading: state.status == LoginStatus.loading,
           onPressed: state.isOtpValid
               ? () => context
@@ -153,12 +172,12 @@ class _DragHandle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 12, bottom: 4),
+      padding: const EdgeInsets.only(top: AppSpacing.md, bottom: AppSpacing.xs),
       child: Container(
         width: 40,
         height: 4,
         decoration: BoxDecoration(
-          color: AppColors.dragHandle,
+          color: Theme.of(context).colorScheme.outline,
           borderRadius: BorderRadius.circular(2),
         ),
       ),

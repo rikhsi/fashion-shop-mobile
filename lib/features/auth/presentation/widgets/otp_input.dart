@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../../../core/constants/app_constants.dart';
-import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_text_styles.dart';
 
 class OtpInput extends StatefulWidget {
@@ -32,7 +32,6 @@ class _OtpInputState extends State<OtpInput> {
     super.initState();
     _controllers = List.generate(_length, (_) => TextEditingController());
     _focusNodes = List.generate(_length, (_) => FocusNode());
-
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _focusNodes[0].requestFocus();
     });
@@ -49,19 +48,15 @@ class _OtpInputState extends State<OtpInput> {
     super.dispose();
   }
 
-  String get _currentOtp => _controllers.map((c) => c.text).join();
+  String get _otp => _controllers.map((c) => c.text).join();
 
   void _onChanged(int index, String value) {
     if (value.length == 1 && index < _length - 1) {
       _focusNodes[index + 1].requestFocus();
     }
-
-    final otp = _currentOtp;
+    final otp = _otp;
     widget.onChanged?.call(otp);
-
-    if (otp.length == _length) {
-      widget.onCompleted?.call(otp);
-    }
+    if (otp.length == _length) widget.onCompleted?.call(otp);
   }
 
   void _onKeyEvent(int index, KeyEvent event) {
@@ -71,7 +66,7 @@ class _OtpInputState extends State<OtpInput> {
         index > 0) {
       _controllers[index - 1].clear();
       _focusNodes[index - 1].requestFocus();
-      widget.onChanged?.call(_currentOtp);
+      widget.onChanged?.call(_otp);
     }
   }
 
@@ -84,15 +79,15 @@ class _OtpInputState extends State<OtpInput> {
   }
 
   Widget _buildCell(int index) {
-    final hasValue = _controllers[index].text.isNotEmpty;
-    final hasFocus = _focusNodes[index].hasFocus;
-
-    return AnimatedBuilder(
+    return _FocusAwareBuilder(
       focusNode: _focusNodes[index],
-      builder: (context) {
+      builder: (hasFocus) {
+        final scheme = Theme.of(context).colorScheme;
+        final hasValue = _controllers[index].text.isNotEmpty;
+
         return Container(
-          width: 50,
-          height: 58,
+          width: 48,
+          height: 56,
           margin: EdgeInsets.only(right: index < _length - 1 ? 8 : 0),
           child: KeyboardListener(
             focusNode: FocusNode(),
@@ -104,42 +99,44 @@ class _OtpInputState extends State<OtpInput> {
               textAlign: TextAlign.center,
               keyboardType: TextInputType.number,
               maxLength: 1,
-              style: AppTextStyles.otpDigit,
+              style: AppTextStyles.displayMedium.copyWith(
+                color: scheme.onSurface,
+              ),
               inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               decoration: InputDecoration(
                 counterText: '',
                 filled: true,
                 fillColor: hasValue
-                    ? AppColors.primaryLight
-                    : AppColors.inputBackground,
+                    ? scheme.primaryContainer
+                    : scheme.outlineVariant,
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
                   borderSide: BorderSide(
                     color: hasFocus
-                        ? AppColors.primary
+                        ? scheme.primary
                         : hasValue
-                            ? AppColors.primary.withValues(alpha: 0.3)
-                            : AppColors.inputBorder,
+                            ? scheme.primary.withValues(alpha: 0.3)
+                            : scheme.outline,
                   ),
                 ),
                 enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
                   borderSide: BorderSide(
                     color: hasValue
-                        ? AppColors.primary.withValues(alpha: 0.3)
-                        : AppColors.inputBorder,
+                        ? scheme.primary.withValues(alpha: 0.3)
+                        : scheme.outline,
                   ),
                 ),
                 focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: const BorderSide(
-                    color: AppColors.primary,
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+                  borderSide: BorderSide(
+                    color: scheme.primary,
                     width: 1.5,
                   ),
                 ),
-                contentPadding: const EdgeInsets.symmetric(vertical: 16),
+                contentPadding: const EdgeInsets.symmetric(vertical: 14),
               ),
-              onChanged: (value) => _onChanged(index, value),
+              onChanged: (v) => _onChanged(index, v),
             ),
           ),
         );
@@ -148,35 +145,35 @@ class _OtpInputState extends State<OtpInput> {
   }
 }
 
-class AnimatedBuilder extends StatefulWidget {
+class _FocusAwareBuilder extends StatefulWidget {
   final FocusNode focusNode;
-  final WidgetBuilder builder;
+  final Widget Function(bool hasFocus) builder;
 
-  const AnimatedBuilder({
-    super.key,
+  const _FocusAwareBuilder({
     required this.focusNode,
     required this.builder,
   });
 
   @override
-  State<AnimatedBuilder> createState() => _AnimatedBuilderState();
+  State<_FocusAwareBuilder> createState() => _FocusAwareBuilderState();
 }
 
-class _AnimatedBuilderState extends State<AnimatedBuilder> {
+class _FocusAwareBuilderState extends State<_FocusAwareBuilder> {
   @override
   void initState() {
     super.initState();
-    widget.focusNode.addListener(_onFocusChanged);
+    widget.focusNode.addListener(_rebuild);
   }
 
   @override
   void dispose() {
-    widget.focusNode.removeListener(_onFocusChanged);
+    widget.focusNode.removeListener(_rebuild);
     super.dispose();
   }
 
-  void _onFocusChanged() => setState(() {});
+  void _rebuild() => setState(() {});
 
   @override
-  Widget build(BuildContext context) => widget.builder(context);
+  Widget build(BuildContext context) =>
+      widget.builder(widget.focusNode.hasFocus);
 }
