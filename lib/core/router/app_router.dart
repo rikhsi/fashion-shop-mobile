@@ -1,35 +1,22 @@
-import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../features/auth/presentation/pages/login_page.dart';
+import '../../features/shell/presentation/pages/shell_page.dart';
+import '../../features/wishlist/presentation/pages/wishlist_page.dart';
 
 class AppRouter {
   static final GoRouter router = GoRouter(
-    initialLocation: '/login',
+    initialLocation: '/',
     routes: [
       GoRoute(
-        path: '/login',
-        name: 'login',
-        builder: (context, state) => const LoginPage(),
+        path: '/',
+        name: 'shell',
+        builder: (context, state) => const ShellPage(),
       ),
       GoRoute(
-        path: '/home',
-        name: 'home',
-        builder: (context, state) => const _HomePlaceholder(),
+        path: '/wishlist',
+        name: 'wishlist',
+        builder: (context, state) => const WishlistPage(),
       ),
     ],
   );
-}
-
-class _HomePlaceholder extends StatelessWidget {
-  const _HomePlaceholder();
-
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: Text('Home - Coming Soon'),
-      ),
-    );
-  }
 }

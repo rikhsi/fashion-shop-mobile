@@ -36,3 +36,16 @@ class LoginVerifyOtpRequested extends LoginEvent {
 class LoginBackToPhoneRequested extends LoginEvent {
   const LoginBackToPhoneRequested();
 }
+
+class LoginResendOtpRequested extends LoginEvent {
+  const LoginResendOtpRequested();
+}
+
+class _LoginTimerTicked extends LoginEvent {
+  final int remainingSeconds;
+
+  const _LoginTimerTicked(this.remainingSeconds);
+
+  @override
+  List<Object?> get props => [remainingSeconds];
+}

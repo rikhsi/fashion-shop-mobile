@@ -8,12 +8,14 @@ import '../../features/auth/domain/usecases/send_otp_usecase.dart';
 import '../../features/auth/domain/usecases/verify_otp_usecase.dart';
 import '../../features/auth/presentation/bloc/login_bloc.dart';
 import '../network/api_client.dart';
+import '../settings/app_settings_cubit.dart';
 
 final sl = GetIt.instance;
 
 Future<void> initDependencies() async {
   // Core
   sl.registerLazySingleton<ApiClient>(() => ApiClient());
+  sl.registerLazySingleton<AppSettingsCubit>(() => AppSettingsCubit());
 
   // Auth - Datasources
   sl.registerLazySingleton<AuthRemoteDatasource>(
