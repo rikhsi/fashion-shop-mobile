@@ -4,11 +4,15 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/constants/app_constants.dart';
+import '../../domain/entities/auth_entity.dart';
 import '../../domain/usecases/send_otp_usecase.dart';
 import '../../domain/usecases/verify_otp_usecase.dart';
 
 part 'login_event.dart';
 part 'login_state.dart';
+
+// TEMP: fast auth flow for profile UI QA.
+const bool _profilePreviewAuthBypass = true;
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   final SendOtpUseCase sendOtpUseCase;
@@ -33,16 +37,35 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     LoginPhoneNumberChanged event,
     Emitter<LoginState> emit,
   ) {
-    emit(state.copyWith(
+    final nextState = state.copyWith(
       phoneNumber: event.phoneNumber,
       status: LoginStatus.initial,
-    ));
+    );
+
+    if (_profilePreviewAuthBypass &&
+        nextState.isPhoneValid &&
+        state.step == LoginStep.phone) {
+      emit(nextState.copyWith(step: LoginStep.otp, resendTimerSeconds: 0));
+      return;
+    }
+
+    emit(nextState);
   }
 
   Future<void> _onSendOtpRequested(
     LoginSendOtpRequested event,
     Emitter<LoginState> emit,
   ) async {
+    if (_profilePreviewAuthBypass) {
+      emit(state.copyWith(
+        status: LoginStatus.initial,
+        step: LoginStep.otp,
+        verificationId: 'preview-verification-id',
+        resendTimerSeconds: 0,
+      ));
+      return;
+    }
+
     emit(state.copyWith(status: LoginStatus.loading));
 
     final digits = state.phoneNumber.replaceAll(RegExp(r'[^\d]'), '');
@@ -82,6 +105,20 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     LoginVerifyOtpRequested event,
     Emitter<LoginState> emit,
   ) async {
+    if (_profilePreviewAuthBypass) {
+      final digits = state.phoneNumber.replaceAll(RegExp(r'[^\d]'), '');
+      final fullNumber = '${state.countryCode}$digits';
+      emit(state.copyWith(
+        status: LoginStatus.success,
+        authEntity: AuthEntity(
+          token: 'preview-token',
+          phoneNumber: fullNumber,
+          isNewUser: false,
+        ),
+      ));
+      return;
+    }
+
     emit(state.copyWith(status: LoginStatus.loading));
 
     final digits = state.phoneNumber.replaceAll(RegExp(r'[^\d]'), '');
@@ -101,6 +138,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       )),
       (authEntity) => emit(state.copyWith(
         status: LoginStatus.success,
+        authEntity: authEntity,
       )),
     );
   }
@@ -123,6 +161,14 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     LoginResendOtpRequested event,
     Emitter<LoginState> emit,
   ) async {
+    if (_profilePreviewAuthBypass) {
+      emit(state.copyWith(
+        status: LoginStatus.initial,
+        resendTimerSeconds: 0,
+      ));
+      return;
+    }
+
     if (!state.canResend) return;
 
     emit(state.copyWith(status: LoginStatus.loading));

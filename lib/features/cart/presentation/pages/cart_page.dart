@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/l10n/app_localizations.dart';
-import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_text_styles.dart';
+import '../../../../shared/widgets/app_empty_state.dart';
 
 class CartPage extends StatelessWidget {
   const CartPage({super.key});
@@ -20,24 +20,10 @@ class CartPage extends StatelessWidget {
         ),
         centerTitle: false,
       ),
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              Icons.shopping_bag_outlined,
-              size: 64,
-              color: scheme.outlineVariant,
-            ),
-            const SizedBox(height: AppSpacing.base),
-            Text(
-              tr.cart,
-              style: AppTextStyles.titleMedium.copyWith(
-                color: scheme.onSurfaceVariant,
-              ),
-            ),
-          ],
-        ),
+      body: AppEmptyState(
+        icon: Icons.shopping_bag_outlined,
+        title: tr.emptyCart,
+        description: tr.emptyCartDescription,
       ),
     );
   }

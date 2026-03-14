@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 import '../../../../core/l10n/app_localizations.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../shared/models/product.dart';
+import '../../../../shared/widgets/app_section_header.dart';
 import '../../../../shared/widgets/product_card.dart';
-import 'section_header.dart';
 
 class PopularProductsSection extends StatelessWidget {
-  const PopularProductsSection({super.key});
+  final List<Product> products;
+
+  const PopularProductsSection({super.key, required this.products});
 
   @override
   Widget build(BuildContext context) {
@@ -16,10 +18,7 @@ class PopularProductsSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: AppSpacing.screenPadding,
-          child: SectionHeader(title: tr.popularProducts),
-        ),
+        AppSectionHeader(title: tr.popularProducts),
         const SizedBox(height: AppSpacing.base),
         Padding(
           padding: AppSpacing.screenPadding,
@@ -32,9 +31,9 @@ class PopularProductsSection extends StatelessWidget {
               mainAxisSpacing: AppSpacing.base,
               childAspectRatio: 0.58,
             ),
-            itemCount: MockProducts.popular.length,
+            itemCount: products.length,
             itemBuilder: (_, i) => ProductCard(
-              product: MockProducts.popular[i],
+              product: products[i],
               onTap: () {},
             ),
           ),

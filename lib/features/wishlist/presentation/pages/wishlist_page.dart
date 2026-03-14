@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/l10n/app_localizations.dart';
 import '../../../../core/theme/app_text_styles.dart';
+import '../../../../shared/widgets/app_empty_state.dart';
 
 class WishlistPage extends StatelessWidget {
   const WishlistPage({super.key});
@@ -9,32 +10,19 @@ class WishlistPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
+    final tr = context.tr;
 
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Wishlist',
+          tr.wishlist,
           style: AppTextStyles.titleLarge.copyWith(color: scheme.onSurface),
         ),
       ),
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              Icons.favorite_border_rounded,
-              size: 64,
-              color: scheme.outlineVariant,
-            ),
-            const SizedBox(height: AppSpacing.base),
-            Text(
-              'Your wishlist is empty',
-              style: AppTextStyles.titleMedium.copyWith(
-                color: scheme.onSurfaceVariant,
-              ),
-            ),
-          ],
-        ),
+      body: AppEmptyState(
+        icon: Icons.favorite_border_rounded,
+        title: tr.emptyWishlist,
+        description: tr.emptyWishlistDescription,
       ),
     );
   }

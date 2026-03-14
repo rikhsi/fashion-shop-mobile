@@ -1,31 +1,25 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/theme/app_colors.dart';
 import '../../../../shared/widgets/banner_carousel.dart';
+import '../../data/models/banner_model.dart';
 
 class PromotionsSection extends StatelessWidget {
-  const PromotionsSection({super.key});
+  final List<BannerModel> banners;
 
-  static const _banners = [
-    BannerItem(
-      title: 'Spring Sale\nUp to 50% Off',
-      subtitle: 'New spring collection available now',
-      color: AppColors.primary,
-    ),
-    BannerItem(
-      title: 'Free Delivery',
-      subtitle: 'On orders over 200 000 sum',
-      color: Color(0xFFE17055),
-    ),
-    BannerItem(
-      title: 'New Arrivals',
-      subtitle: 'Fresh styles every week',
-      color: Color(0xFF00B894),
-    ),
-  ];
+  const PromotionsSection({super.key, required this.banners});
 
   @override
   Widget build(BuildContext context) {
-    return const BannerCarousel(items: _banners);
+    final items = banners
+        .map((b) => BannerItem(
+              title: b.title,
+              subtitle: b.subtitle,
+              color: b.color,
+              textColor: b.textColor,
+              imageUrl: b.imageUrl,
+            ))
+        .toList();
+
+    return BannerCarousel(items: items);
   }
 }

@@ -12,6 +12,7 @@ class LoginState extends Equatable {
   final String verificationId;
   final String? errorMessage;
   final int resendTimerSeconds;
+  final AuthEntity? authEntity;
 
   const LoginState({
     this.step = LoginStep.phone,
@@ -21,6 +22,7 @@ class LoginState extends Equatable {
     this.verificationId = '',
     this.errorMessage,
     this.resendTimerSeconds = 0,
+    this.authEntity,
   });
 
   String get countryCode => AppConstants.defaultCountryCode;
@@ -57,6 +59,7 @@ class LoginState extends Equatable {
     String? verificationId,
     String? errorMessage,
     int? resendTimerSeconds,
+    AuthEntity? authEntity,
   }) {
     return LoginState(
       step: step ?? this.step,
@@ -66,6 +69,7 @@ class LoginState extends Equatable {
       verificationId: verificationId ?? this.verificationId,
       errorMessage: errorMessage,
       resendTimerSeconds: resendTimerSeconds ?? this.resendTimerSeconds,
+      authEntity: authEntity ?? this.authEntity,
     );
   }
 
@@ -78,5 +82,6 @@ class LoginState extends Equatable {
     verificationId,
     errorMessage,
     resendTimerSeconds,
+    authEntity,
   ];
 }

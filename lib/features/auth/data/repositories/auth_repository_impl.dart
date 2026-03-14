@@ -44,6 +44,7 @@ class AuthRepositoryImpl implements AuthRepository {
         verificationId: verificationId,
       );
       await localDatasource.cacheToken(result.token);
+      await localDatasource.cachePhoneNumber(result.phoneNumber);
       return Right(result);
     } on ServerException catch (e) {
       return Left(ServerFailure(e.message));
@@ -67,6 +68,16 @@ class AuthRepositoryImpl implements AuthRepository {
     try {
       final hasToken = await localDatasource.hasToken();
       return Right(hasToken);
+    } on CacheException catch (e) {
+      return Left(CacheFailure(e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, String?>> getCachedPhoneNumber() async {
+    try {
+      final phoneNumber = await localDatasource.getCachedPhoneNumber();
+      return Right(phoneNumber);
     } on CacheException catch (e) {
       return Left(CacheFailure(e.message));
     }

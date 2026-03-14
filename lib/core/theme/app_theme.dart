@@ -58,7 +58,7 @@ class AppTheme {
         fillColor: scheme.outlineVariant,
         contentPadding: const EdgeInsets.symmetric(
           horizontal: AppSpacing.base,
-          vertical: 14,
+          vertical: AppSpacing.md,
         ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
@@ -81,15 +81,26 @@ class AppTheme {
         elevation: 0,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+          side: BorderSide(color: scheme.outline.withValues(alpha: 0.5)),
         ),
         margin: EdgeInsets.zero,
+      ),
+      listTileTheme: ListTileThemeData(
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: AppSpacing.base),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+        ),
+        minLeadingWidth: 0,
+        horizontalTitleGap: AppSpacing.md,
       ),
       bottomSheetTheme: BottomSheetThemeData(
         backgroundColor: scheme.surface,
         surfaceTintColor: Colors.transparent,
         shape: const RoundedRectangleBorder(
-          borderRadius:
-              BorderRadius.vertical(top: Radius.circular(AppSpacing.radiusXxl)),
+          borderRadius: BorderRadius.vertical(
+            top: Radius.circular(AppSpacing.radiusXxl),
+          ),
         ),
       ),
       chipTheme: ChipThemeData(
@@ -108,6 +119,19 @@ class AppTheme {
       dividerTheme: DividerThemeData(
         color: scheme.outline,
         thickness: 0.5,
+        space: 0,
+      ),
+      switchTheme: SwitchThemeData(
+        thumbColor: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) return scheme.primary;
+          return scheme.outline;
+        }),
+        trackColor: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
+            return scheme.primary.withValues(alpha: 0.3);
+          }
+          return scheme.outline.withValues(alpha: 0.3);
+        }),
       ),
       textTheme: TextTheme(
         displayLarge: AppTextStyles.displayLarge,

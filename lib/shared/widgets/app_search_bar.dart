@@ -24,7 +24,7 @@ class AppSearchBar extends StatelessWidget {
     return GestureDetector(
       onTap: readOnly ? onTap : null,
       child: Container(
-        height: 44,
+        height: AppSpacing.searchBarHeight,
         decoration: BoxDecoration(
           color: scheme.outlineVariant,
           borderRadius: BorderRadius.circular(AppSpacing.radiusMd),

@@ -52,6 +52,7 @@ class AppLocalizations {
   String get resendCodeIn => get('resendCodeIn');
   String get agreementPrefix => get('agreementPrefix');
   String get personalDataPolicy => get('personalDataPolicy');
+  String get phoneHint => get('phoneHint');
 
   // ── Profile ──
   String get settings => get('settings');
@@ -63,10 +64,70 @@ class AppLocalizations {
   String get loginToAccount => get('loginToAccount');
   String get loginDescription => get('loginDescription');
   String get login => get('login');
+  String get editProfile => get('editProfile');
+  String get myOrders => get('myOrders');
+  String get myReviews => get('myReviews');
+  String get becomeASeller => get('becomeASeller');
+  String get myChats => get('myChats');
+  String get notifications => get('notifications');
+  String get myPromoCodes => get('myPromoCodes');
+  String get contactUs => get('contactUs');
+  String get defaultUserName => get('defaultUserName');
+  String get newUserName => get('newUserName');
+  String get phonePlaceholder => get('phonePlaceholder');
 
   // ── Product ──
   String get addToCart => get('addToCart');
   String get currency => get('currency');
+  String get newBadge => get('newBadge');
+
+  // ── Empty states ──
+  String get emptyCart => get('emptyCart');
+  String get emptyCartDescription => get('emptyCartDescription');
+  String get emptyWishlist => get('emptyWishlist');
+  String get emptyWishlistDescription => get('emptyWishlistDescription');
+  String get wishlist => get('wishlist');
+
+  // ── Banners ──
+  String get bannerSaleTitle => get('bannerSaleTitle');
+  String get bannerSaleSubtitle => get('bannerSaleSubtitle');
+  String get bannerDeliveryTitle => get('bannerDeliveryTitle');
+  String get bannerDeliverySubtitle => get('bannerDeliverySubtitle');
+  String get bannerNewTitle => get('bannerNewTitle');
+  String get bannerNewSubtitle => get('bannerNewSubtitle');
+
+  // ── Errors ──
+  String get errorGeneric => get('errorGeneric');
+  String get errorNetwork => get('errorNetwork');
+  String get errorServer => get('errorServer');
+
+  // ── Validation ──
+  String get validationPhoneRequired => get('validationPhoneRequired');
+  String get validationPhoneInvalid => get('validationPhoneInvalid');
+  String get validationOtpRequired => get('validationOtpRequired');
+  String get validationOtpLength => get('validationOtpLength');
+  String get validationOtpDigits => get('validationOtpDigits');
+
+  // ── Profile edit ──
+  String get profileEditTitle => get('profileEditTitle');
+  String get profileEditDescription => get('profileEditDescription');
+
+  // ── Catalog categories ──
+  String get catClothing => get('catClothing');
+  String get catBeauty => get('catBeauty');
+  String get catVenues => get('catVenues');
+  String get catPhoto => get('catPhoto');
+  String get catDecor => get('catDecor');
+  String get catEntertainment => get('catEntertainment');
+  String get catTransport => get('catTransport');
+  String get catGifts => get('catGifts');
+  String get catTravel => get('catTravel');
+  String get catWomen => get('catWomen');
+  String get catMen => get('catMen');
+  String get catWedding => get('catWedding');
+  String get catEvening => get('catEvening');
+  String get catSuits => get('catSuits');
+  String get catKids => get('catKids');
 
   static const Map<AppLocale, Map<String, String>> _data = {
     AppLocale.en: _en,
@@ -98,9 +159,9 @@ class AppLocalizations {
     'confirm': 'Confirm',
     'resendCode': 'Resend code',
     'resendCodeIn': 'Resend code in',
-    'agreementPrefix':
-        'By continuing you agree to the processing of your ',
+    'agreementPrefix': 'By continuing you agree to the processing of your ',
     'personalDataPolicy': 'Personal Data Policy',
+    'phoneHint': '00 000 00 00',
     'settings': 'Settings',
     'theme': 'Theme',
     'language': 'Language',
@@ -108,11 +169,58 @@ class AppLocalizations {
     'lightMode': 'Light',
     'systemMode': 'System',
     'loginToAccount': 'Log in to your account',
-    'loginDescription':
-        'Track orders, save favorites, and get personal offers',
+    'loginDescription': 'Track orders, save favorites, and get personal offers',
     'login': 'Login',
+    'editProfile': 'Edit Profile',
+    'myOrders': 'My Orders',
+    'myReviews': 'My Reviews',
+    'becomeASeller': 'Become a Seller',
+    'myChats': 'My Chats',
+    'notifications': 'Notifications',
+    'myPromoCodes': 'My Promo Codes',
+    'contactUs': 'Contact Us',
+    'defaultUserName': 'Fashion Shopper',
+    'newUserName': 'New Shopper',
+    'phonePlaceholder': '+998 -- --- -- --',
     'addToCart': 'Add to cart',
     'currency': 'sum',
+    'newBadge': 'NEW',
+    'emptyCart': 'Cart is empty',
+    'emptyCartDescription': 'Add items to get started',
+    'emptyWishlist': 'Wishlist is empty',
+    'emptyWishlistDescription': 'Save items you like here',
+    'wishlist': 'Wishlist',
+    'bannerSaleTitle': 'Spring Sale\nUp to 50% Off',
+    'bannerSaleSubtitle': 'New spring collection available now',
+    'bannerDeliveryTitle': 'Free Delivery',
+    'bannerDeliverySubtitle': 'On orders over 200 000 sum',
+    'bannerNewTitle': 'New Arrivals',
+    'bannerNewSubtitle': 'Fresh styles every week',
+    'errorGeneric': 'An unexpected error occurred',
+    'errorNetwork': 'No internet connection',
+    'errorServer': 'Server error occurred',
+    'validationPhoneRequired': 'Phone number is required',
+    'validationPhoneInvalid': 'Please enter a valid phone number',
+    'validationOtpRequired': 'Verification code is required',
+    'validationOtpLength': 'Verification code must be 6 digits',
+    'validationOtpDigits': 'Verification code must contain only digits',
+    'profileEditTitle': 'Edit Profile',
+    'profileEditDescription': 'You can update your profile details here.',
+    'catClothing': 'Clothing &\nAccessories',
+    'catBeauty': 'Beauty &\nCare',
+    'catVenues': 'Venues',
+    'catPhoto': 'Photo &\nVideo',
+    'catDecor': 'Decor &\nDesign',
+    'catEntertainment': 'Entertainment\n& Music',
+    'catTransport': 'Transport',
+    'catGifts': 'Gifts &\nSouvenirs',
+    'catTravel': 'Travel',
+    'catWomen': 'Women',
+    'catMen': 'Men',
+    'catWedding': 'Wedding Dresses',
+    'catEvening': 'Evening Dresses',
+    'catSuits': 'Suits',
+    'catKids': 'Kids',
   };
 
   static const _ru = {
@@ -141,6 +249,7 @@ class AppLocalizations {
     'resendCodeIn': 'Повторить через',
     'agreementPrefix': 'Продолжая, вы соглашаетесь с обработкой ',
     'personalDataPolicy': 'персональных данных',
+    'phoneHint': '00 000 00 00',
     'settings': 'Настройки',
     'theme': 'Тема',
     'language': 'Язык',
@@ -148,11 +257,58 @@ class AppLocalizations {
     'lightMode': 'Светлая',
     'systemMode': 'Системная',
     'loginToAccount': 'Войдите в аккаунт',
-    'loginDescription':
-        'Отслеживайте заказы, сохраняйте избранное',
+    'loginDescription': 'Отслеживайте заказы, сохраняйте избранное',
     'login': 'Войти',
+    'editProfile': 'Редактировать профиль',
+    'myOrders': 'Мои заказы',
+    'myReviews': 'Мои отзывы',
+    'becomeASeller': 'Стать продавцом',
+    'myChats': 'Мои чаты',
+    'notifications': 'Уведомления',
+    'myPromoCodes': 'Мои промокоды',
+    'contactUs': 'Связаться с нами',
+    'defaultUserName': 'Покупатель',
+    'newUserName': 'Новый покупатель',
+    'phonePlaceholder': '+998 -- --- -- --',
     'addToCart': 'В корзину',
     'currency': 'сум',
+    'newBadge': 'НОВОЕ',
+    'emptyCart': 'Корзина пуста',
+    'emptyCartDescription': 'Добавьте товары, чтобы начать',
+    'emptyWishlist': 'Список желаний пуст',
+    'emptyWishlistDescription': 'Сохраняйте понравившиеся товары',
+    'wishlist': 'Избранное',
+    'bannerSaleTitle': 'Весенняя распродажа\nДо 50% скидки',
+    'bannerSaleSubtitle': 'Новая весенняя коллекция уже здесь',
+    'bannerDeliveryTitle': 'Бесплатная доставка',
+    'bannerDeliverySubtitle': 'На заказы от 200 000 сум',
+    'bannerNewTitle': 'Новинки',
+    'bannerNewSubtitle': 'Свежие стили каждую неделю',
+    'errorGeneric': 'Произошла непредвиденная ошибка',
+    'errorNetwork': 'Нет подключения к интернету',
+    'errorServer': 'Ошибка сервера',
+    'validationPhoneRequired': 'Введите номер телефона',
+    'validationPhoneInvalid': 'Введите корректный номер телефона',
+    'validationOtpRequired': 'Введите код подтверждения',
+    'validationOtpLength': 'Код подтверждения должен быть 6 цифр',
+    'validationOtpDigits': 'Код должен содержать только цифры',
+    'profileEditTitle': 'Редактирование профиля',
+    'profileEditDescription': 'Обновите данные вашего профиля.',
+    'catClothing': 'Одежда,\nаксессуары',
+    'catBeauty': 'Красота\nи уход',
+    'catVenues': 'Места\nпроведения',
+    'catPhoto': 'Фото\nи видео',
+    'catDecor': 'Оформление\nи декор',
+    'catEntertainment': 'Развлечения\nи музыка',
+    'catTransport': 'Транспорт',
+    'catGifts': 'Сувениры\nи подарки',
+    'catTravel': 'Путешествия',
+    'catWomen': 'Женщинам',
+    'catMen': 'Мужчинам',
+    'catWedding': 'Свадебные платья',
+    'catEvening': 'Вечерние платья',
+    'catSuits': 'Мужские костюмы',
+    'catKids': 'Детская одежда',
   };
 
   static const _uz = {
@@ -181,6 +337,7 @@ class AppLocalizations {
     'resendCodeIn': 'Qayta yuborish',
     'agreementPrefix': "Davom etish orqali siz rozilik bildirasiz ",
     'personalDataPolicy': "Maxfiylik siyosati",
+    'phoneHint': '00 000 00 00',
     'settings': 'Sozlamalar',
     'theme': 'Mavzu',
     'language': 'Til',
@@ -188,11 +345,58 @@ class AppLocalizations {
     'lightMode': "Yorug'",
     'systemMode': 'Tizim',
     'loginToAccount': 'Hisobingizga kiring',
-    'loginDescription':
-        'Buyurtmalarni kuzating, sevimlilarni saqlang',
+    'loginDescription': 'Buyurtmalarni kuzating, sevimlilarni saqlang',
     'login': 'Kirish',
+    'editProfile': 'Profilni tahrirlash',
+    'myOrders': 'Buyurtmalarim',
+    'myReviews': 'Sharhlarim',
+    'becomeASeller': "Sotuvchi bo'lish",
+    'myChats': 'Chatlarim',
+    'notifications': 'Bildirishnomalar',
+    'myPromoCodes': 'Promokodlarim',
+    'contactUs': "Biz bilan bog'laning",
+    'defaultUserName': 'Xaridor',
+    'newUserName': 'Yangi xaridor',
+    'phonePlaceholder': '+998 -- --- -- --',
     'addToCart': 'Savatga',
     'currency': "so'm",
+    'newBadge': 'YANGI',
+    'emptyCart': 'Savat bosh',
+    'emptyCartDescription': "Boshlash uchun mahsulot qo'shing",
+    'emptyWishlist': "Sevimlilar ro'yxati bosh",
+    'emptyWishlistDescription': "Yoqtirgan mahsulotlarni saqlang",
+    'wishlist': 'Sevimlilar',
+    'bannerSaleTitle': "Bahorgi chegirma\n50% gacha",
+    'bannerSaleSubtitle': "Yangi bahorgi kolleksiya mavjud",
+    'bannerDeliveryTitle': "Bepul yetkazib berish",
+    'bannerDeliverySubtitle': "200 000 so'mdan ortiq buyurtmalarga",
+    'bannerNewTitle': 'Yangi mahsulotlar',
+    'bannerNewSubtitle': "Har hafta yangi uslublar",
+    'errorGeneric': "Kutilmagan xatolik yuz berdi",
+    'errorNetwork': "Internet aloqasi yo'q",
+    'errorServer': 'Server xatoligi',
+    'validationPhoneRequired': 'Telefon raqam kiritilishi shart',
+    'validationPhoneInvalid': "To'g'ri telefon raqam kiriting",
+    'validationOtpRequired': 'Tasdiqlash kodi kiritilishi shart',
+    'validationOtpLength': "Tasdiqlash kodi 6 ta raqamdan iborat bo'lishi kerak",
+    'validationOtpDigits': "Kod faqat raqamlardan iborat bo'lishi kerak",
+    'profileEditTitle': 'Profilni tahrirlash',
+    'profileEditDescription': "Profil ma'lumotlarini yangilang.",
+    'catClothing': "Kiyim va\naksessuarlar",
+    'catBeauty': "Go'zallik\nva parvarish",
+    'catVenues': "O'tkazish\njoylari",
+    'catPhoto': "Foto va\nvideo",
+    'catDecor': "Bezatish\nva dizayn",
+    'catEntertainment': "Ko'ngil ochar\nva musiqa",
+    'catTransport': 'Transport',
+    'catGifts': "Sovg'alar",
+    'catTravel': "Sayohat",
+    'catWomen': 'Ayollar',
+    'catMen': 'Erkaklar',
+    'catWedding': "To'y ko'ylaklari",
+    'catEvening': "Kechki ko'ylaklar",
+    'catSuits': 'Erkak kostyumlari',
+    'catKids': 'Bolalar kiyimi',
   };
 }
 

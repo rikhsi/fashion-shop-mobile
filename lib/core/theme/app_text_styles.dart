@@ -8,6 +8,7 @@ abstract final class AppTextStyles {
     fontSize: 28,
     fontWeight: FontWeight.w700,
     height: 1.2,
+    letterSpacing: -0.5,
   );
 
   static const TextStyle displayMedium = TextStyle(
@@ -15,6 +16,7 @@ abstract final class AppTextStyles {
     fontSize: 24,
     fontWeight: FontWeight.w700,
     height: 1.25,
+    letterSpacing: -0.3,
   );
 
   static const TextStyle titleLarge = TextStyle(
@@ -101,5 +103,19 @@ abstract final class AppTextStyles {
     fontSize: 11,
     fontWeight: FontWeight.w700,
     height: 1.2,
+  );
+
+  static const TextStyle bannerTitle = TextStyle(
+    fontFamily: _fontFamily,
+    fontSize: 22,
+    fontWeight: FontWeight.w700,
+    height: 1.2,
+  );
+
+  static const TextStyle bannerSubtitle = TextStyle(
+    fontFamily: _fontFamily,
+    fontSize: 14,
+    fontWeight: FontWeight.w400,
+    height: 1.4,
   );
 }

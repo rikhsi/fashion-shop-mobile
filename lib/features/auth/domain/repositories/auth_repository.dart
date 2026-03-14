@@ -11,6 +11,7 @@ abstract class AuthRepository {
     required String otp,
     required String verificationId,
   });
+  Future<Either<Failure, String?>> getCachedPhoneNumber();
   Future<Either<Failure, void>> logout();
   Future<Either<Failure, bool>> isLoggedIn();
 }

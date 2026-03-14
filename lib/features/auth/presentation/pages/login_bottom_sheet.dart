@@ -8,13 +8,14 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../shared/widgets/primary_button.dart';
+import '../../domain/entities/auth_entity.dart';
 import '../bloc/login_bloc.dart';
 import '../widgets/agreement_text.dart';
 import '../widgets/phone_input.dart';
 import 'otp_page.dart';
 
-Future<bool?> showLoginBottomSheet(BuildContext context) {
-  return showModalBottomSheet<bool>(
+Future<AuthEntity?> showLoginBottomSheet(BuildContext context) {
+  return showModalBottomSheet<AuthEntity>(
     context: context,
     isScrollControlled: true,
     backgroundColor: Colors.transparent,
@@ -36,7 +37,7 @@ class _LoginBottomSheetShell extends StatelessWidget {
       listenWhen: (prev, curr) => prev.status != curr.status,
       listener: (context, state) {
         if (state.status == LoginStatus.success) {
-          Navigator.of(context).pop(true);
+          Navigator.of(context).pop(state.authEntity);
         }
         if (state.status == LoginStatus.failure && state.errorMessage != null) {
           ScaffoldMessenger.of(context).showSnackBar(

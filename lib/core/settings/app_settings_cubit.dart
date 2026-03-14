@@ -9,7 +9,7 @@ class AppSettings extends Equatable {
   final AppLocale locale;
 
   const AppSettings({
-    this.themeMode = ThemeMode.system,
+    this.themeMode = ThemeMode.light,
     this.locale = AppLocale.en,
   });
 

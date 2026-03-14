@@ -23,7 +23,7 @@ class ProductCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-    final cur = context.tr.currency;
+    final tr = context.tr;
 
     return GestureDetector(
       onTap: onTap,
@@ -32,34 +32,26 @@ class ProductCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildImage(scheme),
+            _buildImage(scheme, tr),
             const SizedBox(height: AppSpacing.sm),
             _buildName(scheme),
             const SizedBox(height: AppSpacing.xs),
-            _buildPrice(scheme, cur),
+            _buildPrice(scheme, tr.currency),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildImage(ColorScheme scheme) {
+  Widget _buildImage(ColorScheme scheme, AppLocalizations tr) {
     return AspectRatio(
       aspectRatio: 1 / AppSpacing.productCardImageRatio,
-      child: Container(
-        decoration: BoxDecoration(
-          color: product.placeholderColor,
-          borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
-        ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
         child: Stack(
+          fit: StackFit.expand,
           children: [
-            Center(
-              child: Icon(
-                product.icon,
-                size: 48,
-                color: Colors.white.withValues(alpha: 0.6),
-              ),
-            ),
+            _buildImageContent(scheme),
             Positioned(
               top: AppSpacing.sm,
               right: AppSpacing.sm,
@@ -74,13 +66,41 @@ class ProductCard extends StatelessWidget {
                 left: AppSpacing.sm,
                 child: _DiscountBadge(percent: product.discountPercent!),
               ),
-            if (product.isNew)
+            if (product.isNew && product.discountPercent == null)
               Positioned(
                 top: AppSpacing.sm,
                 left: AppSpacing.sm,
-                child: _NewBadge(),
+                child: _NewBadge(label: tr.newBadge),
               ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildImageContent(ColorScheme scheme) {
+    if (product.imageUrl != null && product.imageUrl!.isNotEmpty) {
+      return Image.network(
+        product.imageUrl!,
+        fit: BoxFit.cover,
+        loadingBuilder: (_, child, progress) {
+          if (progress == null) return child;
+          return Container(color: product.placeholderColor);
+        },
+        errorBuilder: (_, __, ___) => _colorPlaceholder(),
+      );
+    }
+    return _colorPlaceholder();
+  }
+
+  Widget _colorPlaceholder() {
+    return Container(
+      color: product.placeholderColor,
+      child: Center(
+        child: Icon(
+          product.icon,
+          size: AppSpacing.xxxl,
+          color: Colors.white.withValues(alpha: 0.6),
         ),
       ),
     );
@@ -123,19 +143,21 @@ class _FavoriteButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+
     return GestureDetector(
       onTap: onTap,
       child: Container(
         width: 32,
         height: 32,
         decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.9),
+          color: scheme.surface.withValues(alpha: 0.9),
           shape: BoxShape.circle,
         ),
         child: Icon(
           isFavorite ? Icons.favorite_rounded : Icons.favorite_border_rounded,
           size: 18,
-          color: isFavorite ? AppColors.error : Colors.grey,
+          color: isFavorite ? AppColors.error : scheme.onSurfaceVariant,
         ),
       ),
     );
@@ -155,7 +177,7 @@ class _DiscountBadge extends StatelessWidget {
       ),
       decoration: BoxDecoration(
         color: AppColors.discount,
-        borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+        borderRadius: BorderRadius.circular(AppSpacing.radiusXs),
       ),
       child: Text(
         '-$percent%',
@@ -166,6 +188,9 @@ class _DiscountBadge extends StatelessWidget {
 }
 
 class _NewBadge extends StatelessWidget {
+  final String label;
+  const _NewBadge({required this.label});
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -175,10 +200,10 @@ class _NewBadge extends StatelessWidget {
       ),
       decoration: BoxDecoration(
         color: AppColors.success,
-        borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+        borderRadius: BorderRadius.circular(AppSpacing.radiusXs),
       ),
       child: Text(
-        'NEW',
+        label,
         style: AppTextStyles.badge.copyWith(color: Colors.white),
       ),
     );

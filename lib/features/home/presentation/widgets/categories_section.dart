@@ -4,25 +4,24 @@ import '../../../../core/l10n/app_localizations.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../shared/widgets/category_chip.dart';
+import '../../data/models/category_model.dart';
 
 class CategoriesSection extends StatelessWidget {
-  const CategoriesSection({super.key});
+  final List<CategoryModel> categories;
+  final int selectedIndex;
+  final ValueChanged<int> onSelected;
+
+  const CategoriesSection({
+    super.key,
+    required this.categories,
+    required this.selectedIndex,
+    required this.onSelected,
+  });
 
   @override
   Widget build(BuildContext context) {
     final tr = context.tr;
     final scheme = Theme.of(context).colorScheme;
-
-    final items = [
-      CategoryItem(label: tr.women, icon: Icons.woman_rounded),
-      CategoryItem(label: tr.men, icon: Icons.man_rounded),
-      CategoryItem(label: tr.shoes, icon: Icons.ice_skating_outlined),
-      CategoryItem(label: tr.accessories, icon: Icons.watch_outlined),
-      CategoryItem(
-        label: tr.newCollection,
-        icon: Icons.auto_awesome_outlined,
-      ),
-    ];
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -42,11 +41,17 @@ class CategoriesSection extends StatelessWidget {
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
             padding: AppSpacing.screenPadding,
-            itemCount: items.length,
+            itemCount: categories.length,
             separatorBuilder: (_, _) =>
                 const SizedBox(width: AppSpacing.lg),
-            itemBuilder: (_, i) =>
-                CategoryChip(item: items[i], onTap: () {}),
+            itemBuilder: (_, i) => CategoryChip(
+              item: CategoryItem(
+                label: categories[i].title,
+                icon: categories[i].iconData,
+              ),
+              isSelected: i == selectedIndex,
+              onTap: () => onSelected(i),
+            ),
           ),
         ),
       ],
