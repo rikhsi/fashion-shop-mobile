@@ -87,7 +87,7 @@ class ProductCard extends StatelessWidget {
           if (progress == null) return child;
           return Container(color: product.placeholderColor);
         },
-        errorBuilder: (_, __, ___) => _colorPlaceholder(),
+        errorBuilder: (_, _, _) => _colorPlaceholder(),
       );
     }
     return _colorPlaceholder();

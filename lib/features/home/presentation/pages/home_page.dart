@@ -46,7 +46,11 @@ class _HomePageState extends State<HomePage> {
     final categoriesFuture = _repository.getCategories();
 
     final banners = await bannersFuture;
-    if (mounted) setState(() { _banners = banners; _bannersLoading = false; });
+    if (mounted)
+      setState(() {
+        _banners = banners;
+        _bannersLoading = false;
+      });
 
     final categories = await categoriesFuture;
     if (!mounted) return;
@@ -114,7 +118,9 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                 ),
-                const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.base)),
+                const SliverToBoxAdapter(
+                  child: SizedBox(height: AppSpacing.base),
+                ),
                 _buildSectionContent(i),
               ],
 
@@ -162,12 +168,7 @@ class _Section {
   bool isLoading;
   bool isExpanded;
 
-  _Section({
-    required this.category,
-    this.cards = const [],
-    this.isLoading = true,
-    this.isExpanded = false,
-  });
+  _Section({required this.category});
 }
 
 // ── Horizontal card list ──
@@ -232,10 +233,8 @@ class _VerticalCardGrid extends StatelessWidget {
               childAspectRatio: 0.58,
             ),
             itemCount: visibleCount,
-            itemBuilder: (_, i) => ProductCard(
-              product: _cardToProduct(cards[i]),
-              onTap: () {},
-            ),
+            itemBuilder: (_, i) =>
+                ProductCard(product: _cardToProduct(cards[i]), onTap: () {}),
           ),
           if (hasMore) ...[
             const SizedBox(height: AppSpacing.base),
@@ -271,9 +270,15 @@ class _VerticalCardGrid extends StatelessWidget {
 
 Product _cardToProduct(CardModel card) {
   const colors = [
-    Color(0xFFE8D5C4), Color(0xFF4A6FA5), Color(0xFF2D3436),
-    Color(0xFFF5F0E8), Color(0xFF6B7B3C), Color(0xFF5C7AEA),
-    Color(0xFFE17055), Color(0xFF00B894), Color(0xFFE8A0BF),
+    Color(0xFFE8D5C4),
+    Color(0xFF4A6FA5),
+    Color(0xFF2D3436),
+    Color(0xFFF5F0E8),
+    Color(0xFF6B7B3C),
+    Color(0xFF5C7AEA),
+    Color(0xFFE17055),
+    Color(0xFF00B894),
+    Color(0xFFE8A0BF),
     Color(0xFF636E72),
   ];
   const categoryIcons = <String, IconData>{
@@ -306,19 +311,11 @@ class _HomeAppBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Expanded(
-          child: AppSearchBar(hintText: context.tr.searchHint),
-        ),
+        Expanded(child: AppSearchBar(hintText: context.tr.searchHint)),
         const SizedBox(width: AppSpacing.sm),
-        AppIconButton(
-          icon: Icons.tune_rounded,
-          onTap: () {},
-        ),
+        AppIconButton(icon: Icons.tune_rounded, onTap: () {}),
         const SizedBox(width: AppSpacing.xs),
-        AppIconButton(
-          icon: Icons.favorite_border_rounded,
-          onTap: () {},
-        ),
+        AppIconButton(icon: Icons.favorite_border_rounded, onTap: () {}),
       ],
     );
   }

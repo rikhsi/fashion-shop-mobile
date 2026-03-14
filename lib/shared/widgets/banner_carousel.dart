@@ -138,7 +138,7 @@ class _BannerCard extends StatelessWidget {
           if (progress == null) return child;
           return Container(color: item.color);
         },
-        errorBuilder: (_, __, ___) => Container(color: item.color),
+        errorBuilder: (_, _, _) => Container(color: item.color),
       );
     }
     return Container(color: item.color);
@@ -151,10 +151,7 @@ class _BannerCard extends StatelessWidget {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [
-              Colors.transparent,
-              Colors.black.withValues(alpha: 0.65),
-            ],
+            colors: [Colors.transparent, Colors.black.withValues(alpha: 0.65)],
             stops: const [0.3, 1.0],
           ),
         ),
