@@ -5,6 +5,11 @@ import 'package:go_router/go_router.dart';
 import '../di/injection.dart';
 import '../../features/catalog/presentation/pages/category_detail_page.dart';
 import '../../features/profile/presentation/cubit/profile_cubit.dart';
+import '../../features/profile/presentation/pages/contact_us_page.dart';
+import '../../features/profile/presentation/pages/my_chats_page.dart';
+import '../../features/profile/presentation/pages/my_orders_page.dart';
+import '../../features/profile/presentation/pages/my_promo_codes_page.dart';
+import '../../features/profile/presentation/pages/notifications_page.dart';
 import '../../features/profile/presentation/pages/profile_edit_page.dart';
 import '../../features/profile/presentation/pages/profile_menu_destination_page.dart';
 import '../../features/profile/presentation/pages/profile_page.dart';
@@ -48,10 +53,7 @@ class AppRouter {
       GoRoute(
         path: '/profile/orders',
         name: 'profile-orders',
-        builder: (context, state) => const ProfileMenuDestinationPage(
-          title: 'My Orders',
-          icon: Icons.receipt_long_outlined,
-        ),
+        builder: (context, state) => const MyOrdersPage(),
       ),
       GoRoute(
         path: '/profile/reviews',
@@ -72,26 +74,17 @@ class AppRouter {
       GoRoute(
         path: '/profile/chats',
         name: 'profile-chats',
-        builder: (context, state) => const ProfileMenuDestinationPage(
-          title: 'My Chats',
-          icon: Icons.chat_bubble_outline_rounded,
-        ),
+        builder: (context, state) => const MyChatsPage(),
       ),
       GoRoute(
         path: '/profile/notifications',
         name: 'profile-notifications',
-        builder: (context, state) => const ProfileMenuDestinationPage(
-          title: 'Notifications',
-          icon: Icons.notifications_none_rounded,
-        ),
+        builder: (context, state) => const NotificationsPage(),
       ),
       GoRoute(
         path: '/profile/promo-codes',
         name: 'profile-promo-codes',
-        builder: (context, state) => const ProfileMenuDestinationPage(
-          title: 'My Promo Codes',
-          icon: Icons.discount_outlined,
-        ),
+        builder: (context, state) => const MyPromoCodesPage(),
       ),
       GoRoute(
         path: '/profile/settings',
@@ -104,10 +97,7 @@ class AppRouter {
       GoRoute(
         path: '/profile/contact',
         name: 'profile-contact',
-        builder: (context, state) => const ProfileMenuDestinationPage(
-          title: 'Contact Us',
-          icon: Icons.support_agent_outlined,
-        ),
+        builder: (context, state) => const ContactUsPage(),
       ),
     ],
   );

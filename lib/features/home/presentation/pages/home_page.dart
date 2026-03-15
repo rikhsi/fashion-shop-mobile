@@ -4,14 +4,18 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/di/injection.dart';
 import '../../../../core/l10n/app_localizations.dart';
-import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_text_styles.dart';
-import '../../../../shared/models/product.dart';
+import '../../../../shared/animations/app_page_route.dart';
+import '../../../../shared/mappers/card_mapper.dart';
 import '../../../../shared/widgets/app_icon_button.dart';
 import '../../../../shared/widgets/app_search_bar.dart';
 import '../../../../shared/widgets/app_section_header.dart';
 import '../../../../shared/widgets/product_card.dart';
+import '../../../cart/data/cart_service.dart';
+import '../../../favorites/data/favorites_service.dart';
+import '../../../product/presentation/pages/product_detail_page.dart';
+import '../../../search/presentation/pages/search_page.dart';
 import '../../data/models/banner_model.dart';
 import '../../data/models/card_model.dart';
 import '../../data/models/category_model.dart';
@@ -29,6 +33,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final _repository = sl<HomeRepository>();
+  final _favorites = sl<FavoritesService>();
+  final _cart = sl<CartService>();
 
   bool _bannersLoading = true;
   bool _categoriesLoading = true;
@@ -39,6 +45,17 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     _loadInitialData();
+    _favorites.addListener(_onFavoritesChanged);
+  }
+
+  @override
+  void dispose() {
+    _favorites.removeListener(_onFavoritesChanged);
+    super.dispose();
+  }
+
+  void _onFavoritesChanged() {
+    if (mounted) setState(() {});
   }
 
   Future<void> _loadInitialData() async {
@@ -46,11 +63,12 @@ class _HomePageState extends State<HomePage> {
     final categoriesFuture = _repository.getCategories();
 
     final banners = await bannersFuture;
-    if (mounted)
+    if (mounted) {
       setState(() {
         _banners = banners;
         _bannersLoading = false;
       });
+    }
 
     final categories = await categoriesFuture;
     if (!mounted) return;
@@ -78,6 +96,24 @@ class _HomePageState extends State<HomePage> {
     setState(() => _sections[index].isExpanded = !_sections[index].isExpanded);
   }
 
+  void _addToCart(CardModel card) {
+    _cart.addItem(card);
+    if (!mounted) return;
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(
+          content: Text(context.tr.addedToCart),
+          duration: const Duration(seconds: 1),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+  }
+
+  void _openSearch() {
+    Navigator.push(context, appSlideRoute(const SearchPage()));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -89,17 +125,17 @@ class _HomePageState extends State<HomePage> {
               snap: true,
               backgroundColor: Theme.of(context).colorScheme.surface,
               toolbarHeight: 60,
-              title: const _HomeAppBar(),
+              title: _HomeAppBar(
+                onSearchTap: _openSearch,
+                onFilterTap: _openSearch,
+              ),
             ),
-
             const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.sm)),
-
             SliverToBoxAdapter(
               child: _bannersLoading
                   ? const BannerSkeleton()
                   : PromotionsSection(banners: _banners),
             ),
-
             if (_categoriesLoading)
               const SliverToBoxAdapter(
                 child: Padding(
@@ -123,7 +159,6 @@ class _HomePageState extends State<HomePage> {
                 ),
                 _buildSectionContent(i),
               ],
-
             const SliverPadding(
               padding: EdgeInsets.only(bottom: AppSpacing.xxl),
             ),
@@ -146,7 +181,12 @@ class _HomePageState extends State<HomePage> {
 
     if (section.category.layout == CategoryLayout.horizontal) {
       return SliverToBoxAdapter(
-        child: _HorizontalCardList(cards: section.cards),
+        child: _HorizontalCardList(
+          cards: section.cards,
+          favorites: _favorites,
+          onFavoriteTap: (id) => _favorites.toggle(id),
+          onAddToCart: _addToCart,
+        ),
       );
     }
 
@@ -154,7 +194,10 @@ class _HomePageState extends State<HomePage> {
       child: _VerticalCardGrid(
         cards: section.cards,
         isExpanded: section.isExpanded,
+        favorites: _favorites,
         onShowMore: () => _toggleExpanded(index),
+        onFavoriteTap: (id) => _favorites.toggle(id),
+        onAddToCart: _addToCart,
       ),
     );
   }
@@ -164,9 +207,9 @@ class _HomePageState extends State<HomePage> {
 
 class _Section {
   final CategoryModel category;
-  List<CardModel> cards;
-  bool isLoading;
-  bool isExpanded;
+  List<CardModel> cards = const [];
+  bool isLoading = true;
+  bool isExpanded = false;
 
   _Section({required this.category});
 }
@@ -175,7 +218,16 @@ class _Section {
 
 class _HorizontalCardList extends StatelessWidget {
   final List<CardModel> cards;
-  const _HorizontalCardList({required this.cards});
+  final FavoritesService favorites;
+  final ValueChanged<String> onFavoriteTap;
+  final ValueChanged<CardModel> onAddToCart;
+
+  const _HorizontalCardList({
+    required this.cards,
+    required this.favorites,
+    required this.onFavoriteTap,
+    required this.onAddToCart,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -186,11 +238,22 @@ class _HorizontalCardList extends StatelessWidget {
         padding: AppSpacing.screenPadding,
         itemCount: cards.length,
         separatorBuilder: (_, _) => const SizedBox(width: AppSpacing.md),
-        itemBuilder: (_, i) => ProductCard(
-          product: _cardToProduct(cards[i]),
-          width: 150,
-          onTap: () {},
-        ),
+        itemBuilder: (_, i) {
+          final card = cards[i];
+          return ProductCard(
+            product: cardToProduct(
+              card,
+              isFavorite: favorites.isFavorite(card.id),
+            ),
+            width: 150,
+            onTap: () => Navigator.push(
+              context,
+              appSlideRoute(ProductDetailPage(card: card)),
+            ),
+            onFavoriteTap: () => onFavoriteTap(card.id),
+            onAddToCart: () => onAddToCart(card),
+          );
+        },
       ),
     );
   }
@@ -201,14 +264,20 @@ class _HorizontalCardList extends StatelessWidget {
 class _VerticalCardGrid extends StatelessWidget {
   final List<CardModel> cards;
   final bool isExpanded;
+  final FavoritesService favorites;
   final VoidCallback onShowMore;
+  final ValueChanged<String> onFavoriteTap;
+  final ValueChanged<CardModel> onAddToCart;
 
   static const _collapsedCount = 8;
 
   const _VerticalCardGrid({
     required this.cards,
     required this.isExpanded,
+    required this.favorites,
     required this.onShowMore,
+    required this.onFavoriteTap,
+    required this.onAddToCart,
   });
 
   @override
@@ -223,18 +292,36 @@ class _VerticalCardGrid extends StatelessWidget {
       padding: AppSpacing.screenPadding,
       child: Column(
         children: [
-          GridView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: AppSpacing.md,
-              mainAxisSpacing: AppSpacing.base,
-              childAspectRatio: 0.58,
+          AnimatedSize(
+            duration: const Duration(milliseconds: 350),
+            curve: Curves.easeInOut,
+            alignment: Alignment.topCenter,
+            child: GridView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: AppSpacing.md,
+                mainAxisSpacing: AppSpacing.base,
+                childAspectRatio: 0.58,
+              ),
+              itemCount: visibleCount,
+              itemBuilder: (context, i) {
+                final card = cards[i];
+                return ProductCard(
+                  product: cardToProduct(
+                    card,
+                    isFavorite: favorites.isFavorite(card.id),
+                  ),
+                  onTap: () => Navigator.push(
+                    context,
+                    appSlideRoute(ProductDetailPage(card: card)),
+                  ),
+                  onFavoriteTap: () => onFavoriteTap(card.id),
+                  onAddToCart: () => onAddToCart(card),
+                );
+              },
             ),
-            itemCount: visibleCount,
-            itemBuilder: (_, i) =>
-                ProductCard(product: _cardToProduct(cards[i]), onTap: () {}),
           ),
           if (hasMore) ...[
             const SizedBox(height: AppSpacing.base),
@@ -266,54 +353,26 @@ class _VerticalCardGrid extends StatelessWidget {
   }
 }
 
-// ── Helpers ──
-
-Product _cardToProduct(CardModel card) {
-  const colors = [
-    Color(0xFFE8D5C4),
-    Color(0xFF4A6FA5),
-    Color(0xFF2D3436),
-    Color(0xFFF5F0E8),
-    Color(0xFF6B7B3C),
-    Color(0xFF5C7AEA),
-    Color(0xFFE17055),
-    Color(0xFF00B894),
-    Color(0xFFE8A0BF),
-    Color(0xFF636E72),
-  ];
-  const categoryIcons = <String, IconData>{
-    'women': Icons.dry_cleaning_outlined,
-    'men': Icons.checkroom_outlined,
-    'shoes': Icons.ice_skating_outlined,
-    'accessories': Icons.watch_outlined,
-    'new': Icons.auto_awesome_outlined,
-  };
-  return Product(
-    id: card.id,
-    name: card.title,
-    price: card.price,
-    originalPrice: card.originalPrice,
-    placeholderColor: colors[card.id.hashCode.abs() % colors.length],
-    icon: categoryIcons[card.categoryId] ?? Icons.checkroom_outlined,
-    category: card.categoryId,
-    isNew: card.isNew,
-    isFavorite: card.isFavorite,
-    imageUrl: card.imageUrl,
-  );
-}
-
 // ── App bar ──
 
 class _HomeAppBar extends StatelessWidget {
-  const _HomeAppBar();
+  final VoidCallback onSearchTap;
+  final VoidCallback onFilterTap;
+
+  const _HomeAppBar({required this.onSearchTap, required this.onFilterTap});
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Expanded(child: AppSearchBar(hintText: context.tr.searchHint)),
+        Expanded(
+          child: AppSearchBar(
+            hintText: context.tr.searchHint,
+            onTap: onSearchTap,
+          ),
+        ),
         const SizedBox(width: AppSpacing.sm),
-        AppIconButton(icon: Icons.tune_rounded, onTap: () {}),
+        AppIconButton(icon: Icons.tune_rounded, onTap: onFilterTap),
         const SizedBox(width: AppSpacing.xs),
         AppIconButton(icon: Icons.favorite_border_rounded, onTap: () {}),
       ],

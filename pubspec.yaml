@@ -28,6 +28,9 @@ dependencies:
   # Functional Programming
   dartz: ^0.10.1
 
+  # Share
+  share_plus: ^10.1.4
+
   # Navigation
   go_router: ^14.8.1
 

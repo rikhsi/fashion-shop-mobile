@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/di/injection.dart';
 import '../../../../core/l10n/app_localizations.dart';
 import '../../../../core/theme/app_spacing.dart';
+import '../../../cart/data/cart_service.dart';
 import '../../../cart/presentation/pages/cart_page.dart';
 import '../../../catalog/presentation/pages/catalog_page.dart';
 import '../../../home/presentation/pages/home_page.dart';
@@ -19,6 +20,7 @@ class ShellPage extends StatefulWidget {
 
 class _ShellPageState extends State<ShellPage> {
   int _index = 0;
+  final _cart = sl<CartService>();
 
   static final _pages = [
     const HomePage(),
@@ -29,6 +31,22 @@ class _ShellPageState extends State<ShellPage> {
       child: const ProfilePage(),
     ),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _cart.addListener(_refresh);
+  }
+
+  @override
+  void dispose() {
+    _cart.removeListener(_refresh);
+    super.dispose();
+  }
+
+  void _refresh() {
+    if (mounted) setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -75,6 +93,7 @@ class _ShellPageState extends State<ShellPage> {
                   label: tr.cart,
                   isActive: _index == 2,
                   onTap: () => setState(() => _index = 2),
+                  badge: _cart.itemCount > 0 ? _cart.itemCount : null,
                 ),
                 _NavItem(
                   icon: Icons.person_outline_rounded,
@@ -98,6 +117,7 @@ class _NavItem extends StatelessWidget {
   final String label;
   final bool isActive;
   final VoidCallback onTap;
+  final int? badge;
 
   const _NavItem({
     required this.icon,
@@ -105,6 +125,7 @@ class _NavItem extends StatelessWidget {
     required this.label,
     required this.isActive,
     required this.onTap,
+    this.badge,
   });
 
   @override
@@ -120,23 +141,60 @@ class _NavItem extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
-              padding: const EdgeInsets.symmetric(
-                horizontal: AppSpacing.md,
-                vertical: AppSpacing.xs,
-              ),
-              decoration: BoxDecoration(
-                color: isActive
-                    ? scheme.primaryContainer
-                    : Colors.transparent,
-                borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
-              ),
-              child: Icon(
-                isActive ? activeIcon : icon,
-                size: AppSpacing.iconMd,
-                color: isActive ? scheme.primary : scheme.onSurfaceVariant,
-              ),
+            Stack(
+              clipBehavior: Clip.none,
+              children: [
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.md,
+                    vertical: AppSpacing.xs,
+                  ),
+                  decoration: BoxDecoration(
+                    color: isActive
+                        ? scheme.primaryContainer
+                        : Colors.transparent,
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
+                  ),
+                  child: Icon(
+                    isActive ? activeIcon : icon,
+                    size: AppSpacing.iconMd,
+                    color:
+                        isActive ? scheme.primary : scheme.onSurfaceVariant,
+                  ),
+                ),
+                Positioned(
+                  right: 2,
+                  top: -2,
+                  child: AnimatedScale(
+                    scale: badge != null ? 1.0 : 0.0,
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.elasticOut,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 5,
+                        vertical: 1,
+                      ),
+                      decoration: BoxDecoration(
+                        color: scheme.primary,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      constraints: const BoxConstraints(minWidth: 18),
+                      child: Text(
+                        badge != null
+                            ? (badge! > 99 ? '99+' : '$badge')
+                            : '',
+                        style: const TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.white,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
             const SizedBox(height: AppSpacing.xxs),
             Text(

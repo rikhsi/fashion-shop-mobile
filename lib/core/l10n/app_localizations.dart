@@ -78,8 +78,29 @@ class AppLocalizations {
 
   // ── Product ──
   String get addToCart => get('addToCart');
+  String get addedToCart => get('addedToCart');
   String get currency => get('currency');
   String get newBadge => get('newBadge');
+
+  // ── Search & Filters ──
+  String get noResults => get('noResults');
+  String get noResultsDescription => get('noResultsDescription');
+  String get filters => get('filters');
+  String get priceRange => get('priceRange');
+  String get sortBy => get('sortBy');
+  String get sortNewest => get('sortNewest');
+  String get sortPriceAsc => get('sortPriceAsc');
+  String get sortPriceDesc => get('sortPriceDesc');
+  String get applyFilters => get('applyFilters');
+  String get resetFilters => get('resetFilters');
+  String get allCategories => get('allCategories');
+
+  // ── Cart ──
+  String get clearCart => get('clearCart');
+  String get delivery => get('delivery');
+  String get freeDelivery => get('freeDelivery');
+  String get checkout => get('checkout');
+  String get orderTotal => get('orderTotal');
 
   // ── Empty states ──
   String get emptyCart => get('emptyCart');
@@ -95,6 +116,16 @@ class AppLocalizations {
   String get bannerDeliverySubtitle => get('bannerDeliverySubtitle');
   String get bannerNewTitle => get('bannerNewTitle');
   String get bannerNewSubtitle => get('bannerNewSubtitle');
+
+  // ── Product detail ──
+  String get reviews => get('reviews');
+  String get sold => get('sold');
+  String get description => get('description');
+  String get details => get('details');
+  String get inStock => get('inStock');
+  String get outOfStock => get('outOfStock');
+  String get size => get('size');
+  String get color => get('color');
 
   // ── Errors ──
   String get errorGeneric => get('errorGeneric');
@@ -183,8 +214,38 @@ class AppLocalizations {
     'newUserName': 'New Shopper',
     'phonePlaceholder': '+998 -- --- -- --',
     'addToCart': 'Add to cart',
+    'addedToCart': 'Added to cart',
     'currency': 'sum',
     'newBadge': 'NEW',
+    'noResults': 'No results found',
+    'noResultsDescription': 'Try different keywords or filters',
+    'filters': 'Filters',
+    'sortDefault': 'Default',
+    'sortPopular': 'Popular',
+    'sortDiscount': 'Biggest Discount',
+    'onlyDiscounts': 'Only with discounts',
+    'onlyNew': 'Only new items',
+    'priceRange': 'Price Range',
+    'sortBy': 'Sort By',
+    'sortNewest': 'Newest',
+    'sortPriceAsc': 'Price: Low to High',
+    'sortPriceDesc': 'Price: High to Low',
+    'applyFilters': 'Apply',
+    'resetFilters': 'Reset',
+    'allCategories': 'All',
+    'clearCart': 'Clear',
+    'delivery': 'Delivery',
+    'freeDelivery': 'Free',
+    'checkout': 'Checkout',
+    'orderTotal': 'Total',
+    'reviews': 'Reviews',
+    'sold': 'sold',
+    'description': 'Description',
+    'details': 'Details',
+    'inStock': 'In stock',
+    'outOfStock': 'Out of stock',
+    'size': 'Size',
+    'color': 'Color',
     'emptyCart': 'Cart is empty',
     'emptyCartDescription': 'Add items to get started',
     'emptyWishlist': 'Wishlist is empty',
@@ -271,8 +332,38 @@ class AppLocalizations {
     'newUserName': 'Новый покупатель',
     'phonePlaceholder': '+998 -- --- -- --',
     'addToCart': 'В корзину',
+    'addedToCart': 'Добавлено в корзину',
     'currency': 'сум',
     'newBadge': 'НОВОЕ',
+    'noResults': 'Ничего не найдено',
+    'noResultsDescription': 'Попробуйте другие ключевые слова',
+    'filters': 'Фильтры',
+    'sortDefault': 'По умолчанию',
+    'sortPopular': 'Популярные',
+    'sortDiscount': 'Макс. скидка',
+    'onlyDiscounts': 'Только со скидкой',
+    'onlyNew': 'Только новинки',
+    'priceRange': 'Диапазон цен',
+    'sortBy': 'Сортировка',
+    'sortNewest': 'Новинки',
+    'sortPriceAsc': 'Цена: по возрастанию',
+    'sortPriceDesc': 'Цена: по убыванию',
+    'applyFilters': 'Применить',
+    'resetFilters': 'Сбросить',
+    'allCategories': 'Все',
+    'clearCart': 'Очистить',
+    'delivery': 'Доставка',
+    'freeDelivery': 'Бесплатно',
+    'checkout': 'Оформить заказ',
+    'orderTotal': 'Итого',
+    'reviews': 'Отзывы',
+    'sold': 'продано',
+    'description': 'Описание',
+    'details': 'Характеристики',
+    'inStock': 'В наличии',
+    'outOfStock': 'Нет в наличии',
+    'size': 'Размер',
+    'color': 'Цвет',
     'emptyCart': 'Корзина пуста',
     'emptyCartDescription': 'Добавьте товары, чтобы начать',
     'emptyWishlist': 'Список желаний пуст',
@@ -359,8 +450,38 @@ class AppLocalizations {
     'newUserName': 'Yangi xaridor',
     'phonePlaceholder': '+998 -- --- -- --',
     'addToCart': 'Savatga',
+    'addedToCart': "Savatga qo'shildi",
     'currency': "so'm",
     'newBadge': 'YANGI',
+    'noResults': 'Hech narsa topilmadi',
+    'noResultsDescription': "Boshqa kalit so'zlarni sinab ko'ring",
+    'filters': 'Filterlar',
+    'sortDefault': 'Standart',
+    'sortPopular': 'Mashhur',
+    'sortDiscount': 'Eng katta chegirma',
+    'onlyDiscounts': 'Faqat chegirmali',
+    'onlyNew': 'Faqat yangilar',
+    'priceRange': "Narx oralig'i",
+    'sortBy': 'Saralash',
+    'sortNewest': 'Eng yangi',
+    'sortPriceAsc': 'Narx: arzon → qimmat',
+    'sortPriceDesc': 'Narx: qimmat → arzon',
+    'applyFilters': "Qo'llash",
+    'resetFilters': 'Tozalash',
+    'allCategories': 'Hammasi',
+    'clearCart': 'Tozalash',
+    'delivery': 'Yetkazib berish',
+    'freeDelivery': 'Bepul',
+    'checkout': 'Buyurtma berish',
+    'orderTotal': 'Jami',
+    'reviews': 'Sharhlar',
+    'sold': 'sotilgan',
+    'description': 'Tavsif',
+    'details': "Xususiyatlar",
+    'inStock': 'Mavjud',
+    'outOfStock': 'Mavjud emas',
+    'size': "O'lcham",
+    'color': 'Rang',
     'emptyCart': 'Savat bosh',
     'emptyCartDescription': "Boshlash uchun mahsulot qo'shing",
     'emptyWishlist': "Sevimlilar ro'yxati bosh",

@@ -7,8 +7,10 @@ import '../../features/auth/domain/repositories/auth_repository.dart';
 import '../../features/auth/domain/usecases/send_otp_usecase.dart';
 import '../../features/auth/domain/usecases/verify_otp_usecase.dart';
 import '../../features/auth/presentation/bloc/login_bloc.dart';
+import '../../features/cart/data/cart_service.dart';
 import '../../features/catalog/data/api/catalog_api_service.dart';
 import '../../features/catalog/data/mocks/mock_catalog_api_service.dart';
+import '../../features/favorites/data/favorites_service.dart';
 import '../../features/home/data/datasources/home_datasource.dart';
 import '../../features/home/data/datasources/home_mock_datasource.dart';
 import '../../features/home/data/repositories/home_repository.dart';
@@ -53,6 +55,10 @@ Future<void> initDependencies() async {
 
   // Profile - Cubit
   sl.registerFactory(() => ProfileCubit(authRepository: sl()));
+
+  // Favorites & Cart
+  sl.registerLazySingleton<FavoritesService>(() => FavoritesService());
+  sl.registerLazySingleton<CartService>(() => CartService());
 
   // Home - DataSource (swap HomeMockDataSource → HomeRemoteDataSource for real backend)
   sl.registerLazySingleton<HomeDataSource>(() => HomeMockDataSource());

@@ -25,6 +25,12 @@ class HomeMockDataSource implements HomeDataSource {
     return _cards.where((c) => c.categoryId == categoryId).toList();
   }
 
+  @override
+  Future<List<CardModel>> getAllCards() async {
+    await Future.delayed(const Duration(milliseconds: 300));
+    return List.of(_cards);
+  }
+
   // ── Banners ──
 
   static const _banners = <BannerModel>[

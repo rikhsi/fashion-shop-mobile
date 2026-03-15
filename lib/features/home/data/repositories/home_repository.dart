@@ -9,9 +9,8 @@ class HomeRepository {
   HomeRepository(this._dataSource);
 
   Future<List<BannerModel>> getBanners() => _dataSource.getBanners();
-
   Future<List<CategoryModel>> getCategories() => _dataSource.getCategories();
-
   Future<List<CardModel>> getCards(String categoryId) =>
       _dataSource.getCards(categoryId);
+  Future<List<CardModel>> getAllCards() => _dataSource.getAllCards();
 }

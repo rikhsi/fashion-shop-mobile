@@ -6,4 +6,5 @@ abstract class HomeDataSource {
   Future<List<BannerModel>> getBanners();
   Future<List<CategoryModel>> getCategories();
   Future<List<CardModel>> getCards(String categoryId);
+  Future<List<CardModel>> getAllCards();
 }

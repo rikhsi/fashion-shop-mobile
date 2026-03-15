@@ -32,4 +32,12 @@ class HomeRemoteDataSource implements HomeDataSource {
         .map((e) => CardModel.fromJson(e as Map<String, dynamic>))
         .toList();
   }
+
+  @override
+  Future<List<CardModel>> getAllCards() async {
+    final response = await _client.get('/cards');
+    return (response.data as List)
+        .map((e) => CardModel.fromJson(e as Map<String, dynamic>))
+        .toList();
+  }
 }
