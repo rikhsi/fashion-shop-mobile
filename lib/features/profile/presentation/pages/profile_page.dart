@@ -279,6 +279,18 @@ class _MenuSection extends StatelessWidget {
           ),
           Divider(height: 0, color: scheme.outline),
           AppMenuTile(
+            icon: Icons.straighten_outlined,
+            title: 'My Measurements',
+            onTap: () => context.push('/profile/measurements'),
+          ),
+          Divider(height: 0, color: scheme.outline),
+          AppMenuTile(
+            icon: Icons.content_cut_rounded,
+            title: 'Custom Orders',
+            onTap: () => context.push('/profile/custom-orders'),
+          ),
+          Divider(height: 0, color: scheme.outline),
+          AppMenuTile(
             icon: Icons.settings_outlined,
             title: tr.settings,
             onTap: () => context.push('/profile/settings'),

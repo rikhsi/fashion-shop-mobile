@@ -14,6 +14,9 @@ import '../../features/profile/presentation/pages/profile_edit_page.dart';
 import '../../features/profile/presentation/pages/profile_menu_destination_page.dart';
 import '../../features/profile/presentation/pages/profile_page.dart';
 import '../../features/profile/presentation/pages/settings_page.dart';
+import '../../features/custom_order/presentation/pages/body_measurements_page.dart';
+import '../../features/custom_order/presentation/pages/my_custom_orders_page.dart';
+import '../../features/profile/presentation/pages/become_seller_page.dart';
 import '../../features/shell/presentation/pages/shell_page.dart';
 import '../../features/tryon/presentation/pages/tryon_photos_page.dart';
 import '../../features/wishlist/presentation/pages/wishlist_page.dart';
@@ -68,10 +71,7 @@ class AppRouter {
       GoRoute(
         path: '/profile/seller',
         name: 'profile-seller',
-        builder: (context, state) => const ProfileMenuDestinationPage(
-          title: 'Become a Seller',
-          icon: Icons.storefront_outlined,
-        ),
+        builder: (context, state) => const BecomeSellerPage(),
       ),
       GoRoute(
         path: '/profile/chats',
@@ -102,6 +102,16 @@ class AppRouter {
         path: '/profile/tryon-photos',
         name: 'profile-tryon-photos',
         builder: (context, state) => const TryOnPhotosPage(),
+      ),
+      GoRoute(
+        path: '/profile/measurements',
+        name: 'profile-measurements',
+        builder: (context, state) => const BodyMeasurementsPage(),
+      ),
+      GoRoute(
+        path: '/profile/custom-orders',
+        name: 'profile-custom-orders',
+        builder: (context, state) => const MyCustomOrdersPage(),
       ),
     ],
   );

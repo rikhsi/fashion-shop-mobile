@@ -13,6 +13,7 @@ import '../../../favorites/data/favorites_service.dart';
 import '../../../home/data/models/card_model.dart';
 import '../../data/mocks/mock_product_detail.dart';
 import '../../data/models/product_detail_model.dart';
+import '../../../custom_order/presentation/pages/custom_order_page.dart';
 import '../../../tryon/presentation/pages/tryon_page.dart';
 import 'all_reviews_page.dart';
 import 'fullscreen_gallery_page.dart';
@@ -150,6 +151,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                       _buildDivider(scheme),
                       const SizedBox(height: AppSpacing.base),
                       ..._buildOptionGroups(scheme),
+                      _buildCustomOrderBanner(scheme),
                       _buildDivider(scheme),
                       const SizedBox(height: AppSpacing.base),
                       _buildDescription(scheme, tr),
@@ -653,6 +655,75 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
           ],
         ),
       ],
+    );
+  }
+
+  // ── Custom order banner ──
+
+  Widget _buildCustomOrderBanner(ColorScheme scheme) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: AppSpacing.base),
+      child: GestureDetector(
+        onTap: () {
+          Navigator.push(
+            context,
+            appSlideRoute(
+              CustomOrderPage(
+                mode: CustomOrderMode.fromProduct,
+                productTitle: _detail.title,
+                productImageUrl: _activeGallery.first,
+                productPrice: _currentPrice,
+              ),
+            ),
+          );
+        },
+        child: Container(
+          padding: const EdgeInsets.all(AppSpacing.base),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                scheme.primary.withValues(alpha: 0.08),
+                scheme.primary.withValues(alpha: 0.03),
+              ],
+            ),
+            borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+            border: Border.all(color: scheme.primary.withValues(alpha: 0.3)),
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: 44,
+                height: 44,
+                decoration: BoxDecoration(
+                  color: scheme.primary.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+                ),
+                child: Icon(Icons.content_cut_rounded, color: scheme.primary, size: 22),
+              ),
+              const SizedBox(width: AppSpacing.md),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'No size? Custom tailoring!',
+                      style: AppTextStyles.titleSmall.copyWith(color: scheme.onSurface),
+                    ),
+                    const SizedBox(height: AppSpacing.xxs),
+                    Text(
+                      'We\'ll sew this exactly to your measurements',
+                      style: AppTextStyles.bodySmall.copyWith(
+                        color: scheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Icon(Icons.arrow_forward_ios_rounded, size: 16, color: scheme.primary),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
