@@ -15,6 +15,8 @@ import '../../features/profile/presentation/pages/profile_menu_destination_page.
 import '../../features/profile/presentation/pages/profile_page.dart';
 import '../../features/profile/presentation/pages/settings_page.dart';
 import '../../features/custom_order/presentation/pages/body_measurements_page.dart';
+import '../../features/preferences/presentation/pages/seasonal_preferences_page.dart';
+import '../../features/preferences/presentation/pages/style_preferences_page.dart';
 import '../../features/custom_order/presentation/pages/my_custom_orders_page.dart';
 import '../../features/profile/presentation/pages/become_seller_page.dart';
 import '../../features/shell/presentation/pages/shell_page.dart';
@@ -112,6 +114,16 @@ class AppRouter {
         path: '/profile/custom-orders',
         name: 'profile-custom-orders',
         builder: (context, state) => const MyCustomOrdersPage(),
+      ),
+      GoRoute(
+        path: '/profile/preferences',
+        name: 'profile-preferences',
+        builder: (context, state) => const StylePreferencesPage(),
+      ),
+      GoRoute(
+        path: '/profile/seasonal-preferences',
+        name: 'profile-seasonal-preferences',
+        builder: (context, state) => const SeasonalPreferencesPage(),
       ),
     ],
   );

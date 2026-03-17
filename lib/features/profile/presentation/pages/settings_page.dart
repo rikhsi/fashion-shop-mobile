@@ -38,7 +38,7 @@ class SettingsPage extends StatelessWidget {
               bottom: AppSpacing.xxl,
             ),
             children: [
-              _SectionHeader(title: 'Appearance', scheme: scheme),
+              _SectionHeader(title: tr.appearance, scheme: scheme),
               const SizedBox(height: AppSpacing.sm),
               _buildThemeCard(context, scheme, settings, tr),
               const SizedBox(height: AppSpacing.base),
@@ -48,15 +48,15 @@ class SettingsPage extends StatelessWidget {
               const SizedBox(height: AppSpacing.base),
               _SectionHeader(title: tr.notifications, scheme: scheme),
               const SizedBox(height: AppSpacing.sm),
-              _buildNotificationsCard(scheme),
+              _buildNotificationsCard(scheme, tr),
               const SizedBox(height: AppSpacing.base),
-              _SectionHeader(title: 'Privacy & Security', scheme: scheme),
+              _SectionHeader(title: tr.privacySecurity, scheme: scheme),
               const SizedBox(height: AppSpacing.sm),
-              _buildPrivacyCard(context, scheme),
+              _buildPrivacyCard(context, scheme, tr),
               const SizedBox(height: AppSpacing.base),
-              _SectionHeader(title: 'About', scheme: scheme),
+              _SectionHeader(title: tr.about, scheme: scheme),
               const SizedBox(height: AppSpacing.sm),
-              _buildAboutCard(context, scheme),
+              _buildAboutCard(context, scheme, tr),
               const SizedBox(height: AppSpacing.xl),
               _buildLogoutButton(context, scheme),
               const SizedBox(height: AppSpacing.md),
@@ -188,7 +188,7 @@ class SettingsPage extends StatelessWidget {
     );
   }
 
-  Widget _buildNotificationsCard(ColorScheme scheme) {
+  Widget _buildNotificationsCard(ColorScheme scheme, AppLocalizations tr) {
     return Container(
       decoration: BoxDecoration(
         color: scheme.surfaceContainerHighest,
@@ -198,28 +198,28 @@ class SettingsPage extends StatelessWidget {
         children: [
           _SettingsSwitch(
             icon: Icons.shopping_bag_outlined,
-            label: 'Order updates',
+            label: tr.orderUpdates,
             value: true,
             scheme: scheme,
             showBorder: true,
           ),
           _SettingsSwitch(
             icon: Icons.local_offer_outlined,
-            label: 'Promotions & sales',
+            label: tr.promotionsSales,
             value: true,
             scheme: scheme,
             showBorder: true,
           ),
           _SettingsSwitch(
             icon: Icons.trending_down_rounded,
-            label: 'Price drops',
+            label: tr.priceDrops,
             value: true,
             scheme: scheme,
             showBorder: true,
           ),
           _SettingsSwitch(
             icon: Icons.chat_bubble_outline_rounded,
-            label: 'Chat messages',
+            label: tr.chatMessages,
             value: true,
             scheme: scheme,
             showBorder: false,
@@ -229,7 +229,7 @@ class SettingsPage extends StatelessWidget {
     );
   }
 
-  Widget _buildPrivacyCard(BuildContext context, ColorScheme scheme) {
+  Widget _buildPrivacyCard(BuildContext context, ColorScheme scheme, AppLocalizations tr) {
     return Container(
       decoration: BoxDecoration(
         color: scheme.surfaceContainerHighest,
@@ -239,7 +239,7 @@ class SettingsPage extends StatelessWidget {
         children: [
           _SettingsTile(
             icon: Icons.phone_outlined,
-            label: 'Change Phone Number',
+            label: tr.changePhoneNumber,
             scheme: scheme,
             showBorder: true,
             onTap: () => Navigator.push(
@@ -249,7 +249,7 @@ class SettingsPage extends StatelessWidget {
           ),
           _SettingsTile(
             icon: Icons.shield_outlined,
-            label: 'Privacy Policy',
+            label: tr.privacyPolicy,
             scheme: scheme,
             showBorder: true,
             onTap: () => Navigator.push(
@@ -259,7 +259,7 @@ class SettingsPage extends StatelessWidget {
           ),
           _SettingsTile(
             icon: Icons.description_outlined,
-            label: 'Terms of Service',
+            label: tr.termsOfService,
             scheme: scheme,
             showBorder: false,
             onTap: () => Navigator.push(
@@ -272,7 +272,11 @@ class SettingsPage extends StatelessWidget {
     );
   }
 
-  Widget _buildAboutCard(BuildContext context, ColorScheme scheme) {
+  Widget _buildAboutCard(
+    BuildContext context,
+    ColorScheme scheme,
+    AppLocalizations tr,
+  ) {
     return Container(
       decoration: BoxDecoration(
         color: scheme.surfaceContainerHighest,
@@ -282,7 +286,7 @@ class SettingsPage extends StatelessWidget {
         children: [
           _SettingsTile(
             icon: Icons.info_outline_rounded,
-            label: 'App Version',
+            label: tr.appVersion,
             trailing: Text(
               '1.0.0',
               style: AppTextStyles.bodySmall.copyWith(
@@ -294,15 +298,15 @@ class SettingsPage extends StatelessWidget {
           ),
           _SettingsTile(
             icon: Icons.star_outline_rounded,
-            label: 'Rate the App',
+            label: tr.rateTheApp,
             scheme: scheme,
             showBorder: true,
             onTap: () {
               ScaffoldMessenger.of(context)
                 ..hideCurrentSnackBar()
                 ..showSnackBar(
-                  const SnackBar(
-                    content: Text('Thank you! Opening store page...'),
+                  SnackBar(
+                    content: Text(tr.thankYouOpeningStore),
                     duration: Duration(seconds: 2),
                     behavior: SnackBarBehavior.floating,
                   ),
@@ -311,7 +315,7 @@ class SettingsPage extends StatelessWidget {
           ),
           _SettingsTile(
             icon: Icons.share_outlined,
-            label: 'Share with Friends',
+            label: tr.shareWithFriends,
             scheme: scheme,
             showBorder: true,
             onTap: () {
@@ -322,21 +326,21 @@ class SettingsPage extends StatelessWidget {
           ),
           _SettingsTile(
             icon: Icons.delete_sweep_outlined,
-            label: 'Clear Cache',
+            label: tr.clearCache,
             scheme: scheme,
             showBorder: false,
             onTap: () {
               showDialog(
                 context: context,
                 builder: (ctx) => AlertDialog(
-                  title: const Text('Clear Cache'),
-                  content: const Text(
-                    'This will clear all cached images and temporary data. Your account data will not be affected.',
+                  title: Text(tr.clearCache),
+                  content: Text(
+                    tr.clearCacheConfirm,
                   ),
                   actions: [
                     TextButton(
                       onPressed: () => Navigator.pop(ctx),
-                      child: const Text('Cancel'),
+                      child: Text(tr.cancel),
                     ),
                     TextButton(
                       onPressed: () {
@@ -346,14 +350,14 @@ class SettingsPage extends StatelessWidget {
                         ScaffoldMessenger.of(context)
                           ..hideCurrentSnackBar()
                           ..showSnackBar(
-                            const SnackBar(
-                              content: Text('Cache cleared successfully'),
+                            SnackBar(
+                              content: Text(tr.cacheClearedSuccess),
                               duration: Duration(seconds: 1),
                               behavior: SnackBarBehavior.floating,
                             ),
                           );
                       },
-                      child: const Text('Clear'),
+                      child: Text(tr.clearAction),
                     ),
                   ],
                 ),
@@ -366,6 +370,7 @@ class SettingsPage extends StatelessWidget {
   }
 
   Widget _buildLogoutButton(BuildContext context, ColorScheme scheme) {
+    final tr = context.tr;
     return SizedBox(
       width: double.infinity,
       height: AppSpacing.buttonHeight,
@@ -374,12 +379,12 @@ class SettingsPage extends StatelessWidget {
           showDialog(
             context: context,
             builder: (ctx) => AlertDialog(
-              title: const Text('Log Out'),
-              content: const Text('Are you sure you want to log out?'),
+              title: Text(tr.logOut),
+              content: Text(tr.logOutConfirm),
               actions: [
                 TextButton(
                   onPressed: () => Navigator.pop(ctx),
-                  child: const Text('Cancel'),
+                  child: Text(tr.cancel),
                 ),
                 TextButton(
                   onPressed: () {
@@ -387,7 +392,7 @@ class SettingsPage extends StatelessWidget {
                     Navigator.pop(context);
                   },
                   child: Text(
-                    'Log Out',
+                    tr.logOut,
                     style: TextStyle(color: AppColors.error),
                   ),
                 ),
@@ -397,7 +402,7 @@ class SettingsPage extends StatelessWidget {
         },
         icon: Icon(Icons.logout_rounded, color: AppColors.error),
         label: Text(
-          'Log Out',
+          tr.logOut,
           style: AppTextStyles.labelLarge.copyWith(color: AppColors.error),
         ),
         style: OutlinedButton.styleFrom(
@@ -411,6 +416,7 @@ class SettingsPage extends StatelessWidget {
   }
 
   Widget _buildDeleteAccountButton(BuildContext context, ColorScheme scheme) {
+    final tr = context.tr;
     return SizedBox(
       width: double.infinity,
       height: AppSpacing.buttonHeight,
@@ -425,7 +431,7 @@ class SettingsPage extends StatelessWidget {
           size: 20,
         ),
         label: Text(
-          'Delete Account',
+          tr.deleteAccount,
           style: AppTextStyles.labelLarge.copyWith(
             color: scheme.onSurfaceVariant,
           ),

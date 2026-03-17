@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
+import '../../core/utils/format_utils.dart';
 import '../../features/home/data/models/card_model.dart';
 import '../models/product.dart';
+
+export '../../core/utils/format_utils.dart' show formatPrice;
 
 Product cardToProduct(CardModel card, {bool isFavorite = false}) {
   const colors = [
@@ -30,14 +33,4 @@ Product cardToProduct(CardModel card, {bool isFavorite = false}) {
     isFavorite: isFavorite,
     imageUrl: card.imageUrl,
   );
-}
-
-String formatPrice(double value) {
-  final str = value.toStringAsFixed(0);
-  final buf = StringBuffer();
-  for (int i = 0; i < str.length; i++) {
-    if (i > 0 && (str.length - i) % 3 == 0) buf.write(' ');
-    buf.write(str[i]);
-  }
-  return buf.toString();
 }

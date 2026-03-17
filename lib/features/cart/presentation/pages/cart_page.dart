@@ -5,10 +5,12 @@ import '../../../../core/l10n/app_localizations.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_text_styles.dart';
+import '../../../../shared/animations/app_page_route.dart';
 import '../../../../shared/mappers/card_mapper.dart';
 import '../../../../shared/widgets/app_empty_state.dart';
 import '../../data/cart_service.dart';
 import '../../data/models/cart_item.dart';
+import 'checkout_page.dart';
 
 class CartPage extends StatefulWidget {
   const CartPage({super.key});
@@ -132,6 +134,12 @@ class _CartPageState extends State<CartPage> {
                     freeLabel: tr.freeDelivery,
                     totalLabel: tr.orderTotal,
                     checkoutLabel: tr.checkout,
+                    onCheckout: () {
+                      Navigator.push(
+                        context,
+                        appSlideRoute(const CheckoutPage()),
+                      );
+                    },
                   ),
                 ],
               ),
@@ -312,6 +320,7 @@ class _CartSummary extends StatelessWidget {
   final String freeLabel;
   final String totalLabel;
   final String checkoutLabel;
+  final VoidCallback onCheckout;
 
   const _CartSummary({
     required this.total,
@@ -320,6 +329,7 @@ class _CartSummary extends StatelessWidget {
     required this.freeLabel,
     required this.totalLabel,
     required this.checkoutLabel,
+    required this.onCheckout,
   });
 
   @override
@@ -358,7 +368,7 @@ class _CartSummary extends StatelessWidget {
               width: double.infinity,
               height: AppSpacing.buttonHeight,
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: onCheckout,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: scheme.primary,
                   foregroundColor: scheme.onPrimary,

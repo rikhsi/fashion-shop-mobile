@@ -1,9 +1,11 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/di/injection.dart';
 import '../../../../core/l10n/app_localizations.dart';
+import '../../../../core/settings/app_settings_cubit.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../shared/animations/app_page_route.dart';
@@ -14,6 +16,7 @@ import '../../../../shared/widgets/app_section_header.dart';
 import '../../../../shared/widgets/product_card.dart';
 import '../../../cart/data/cart_service.dart';
 import '../../../favorites/data/favorites_service.dart';
+import '../../../preferences/presentation/pages/style_preferences_page.dart';
 import '../../../product/presentation/pages/product_detail_page.dart';
 import '../../../search/presentation/pages/search_page.dart';
 import '../../data/models/banner_model.dart';
@@ -40,6 +43,7 @@ class _HomePageState extends State<HomePage> {
   bool _categoriesLoading = true;
   List<BannerModel> _banners = [];
   final List<_Section> _sections = [];
+  bool _onboardingChecked = false;
 
   @override
   void initState() {
@@ -114,8 +118,32 @@ class _HomePageState extends State<HomePage> {
     Navigator.push(context, appSlideRoute(const SearchPage()));
   }
 
+  void _showOnboardingIfNeeded() {
+    if (_onboardingChecked) return;
+    _onboardingChecked = true;
+    final settings = context.read<AppSettingsCubit>().state;
+    if (!settings.hasCompletedOnboarding) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        Navigator.push(
+          context,
+          appSlideRoute(const StylePreferencesPage(isOnboarding: true)),
+        );
+      });
+    }
+  }
+
+  void _openPreferences() {
+    Navigator.push(
+      context,
+      appSlideRoute(const StylePreferencesPage()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    _showOnboardingIfNeeded();
+
     return Scaffold(
       body: SafeArea(
         child: CustomScrollView(
@@ -128,9 +156,9 @@ class _HomePageState extends State<HomePage> {
               title: _HomeAppBar(
                 onSearchTap: _openSearch,
                 onFilterTap: _openSearch,
+                onPreferencesTap: _openPreferences,
               ),
             ),
-            const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.sm)),
             SliverToBoxAdapter(
               child: _bannersLoading
                   ? const BannerSkeleton()
@@ -358,8 +386,13 @@ class _VerticalCardGrid extends StatelessWidget {
 class _HomeAppBar extends StatelessWidget {
   final VoidCallback onSearchTap;
   final VoidCallback onFilterTap;
+  final VoidCallback onPreferencesTap;
 
-  const _HomeAppBar({required this.onSearchTap, required this.onFilterTap});
+  const _HomeAppBar({
+    required this.onSearchTap,
+    required this.onFilterTap,
+    required this.onPreferencesTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -372,7 +405,7 @@ class _HomeAppBar extends StatelessWidget {
           ),
         ),
         const SizedBox(width: AppSpacing.sm),
-        AppIconButton(icon: Icons.tune_rounded, onTap: onFilterTap),
+        AppIconButton(icon: Icons.tune_rounded, onTap: onPreferencesTap),
         const SizedBox(width: AppSpacing.xs),
         AppIconButton(icon: Icons.favorite_border_rounded, onTap: () {}),
       ],

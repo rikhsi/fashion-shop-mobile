@@ -237,6 +237,18 @@ class _MenuSection extends StatelessWidget {
       child: Column(
         children: [
           AppMenuTile(
+            icon: Icons.tune_rounded,
+            title: 'Style Preferences',
+            onTap: () => context.push('/profile/preferences'),
+          ),
+          Divider(height: 0, color: scheme.outline),
+          AppMenuTile(
+            icon: Icons.wb_sunny_outlined,
+            title: 'Seasonal Preferences',
+            onTap: () => context.push('/profile/seasonal-preferences'),
+          ),
+          Divider(height: 0, color: scheme.outline),
+          AppMenuTile(
             icon: Icons.receipt_long_outlined,
             title: tr.myOrders,
             onTap: () => context.push('/profile/orders'),

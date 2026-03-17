@@ -14,6 +14,7 @@ import '../../features/favorites/data/favorites_service.dart';
 import '../../features/home/data/datasources/home_datasource.dart';
 import '../../features/home/data/datasources/home_mock_datasource.dart';
 import '../../features/home/data/repositories/home_repository.dart';
+import '../../features/preferences/data/seasonal_preferences_service.dart';
 import '../../features/profile/presentation/cubit/profile_cubit.dart';
 import '../../features/tryon/data/tryon_service.dart';
 import '../network/api_client.dart';
@@ -70,4 +71,9 @@ Future<void> initDependencies() async {
 
   // Try-On
   sl.registerLazySingleton<TryOnService>(() => TryOnService());
+
+  // Preferences
+  sl.registerLazySingleton<SeasonalPreferencesService>(
+    () => SeasonalPreferencesService(),
+  );
 }
