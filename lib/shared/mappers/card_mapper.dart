@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../core/utils/format_utils.dart';
 import '../../features/home/data/models/card_model.dart';
 import '../models/product.dart';
 
@@ -8,9 +7,15 @@ export '../../core/utils/format_utils.dart' show formatPrice;
 
 Product cardToProduct(CardModel card, {bool isFavorite = false}) {
   const colors = [
-    Color(0xFFE8D5C4), Color(0xFF4A6FA5), Color(0xFF2D3436),
-    Color(0xFFF5F0E8), Color(0xFF6B7B3C), Color(0xFF5C7AEA),
-    Color(0xFFE17055), Color(0xFF00B894), Color(0xFFE8A0BF),
+    Color(0xFFE8D5C4),
+    Color(0xFF4A6FA5),
+    Color(0xFF2D3436),
+    Color(0xFFF5F0E8),
+    Color(0xFF6B7B3C),
+    Color(0xFF5C7AEA),
+    Color(0xFFE17055),
+    Color(0xFF00B894),
+    Color(0xFFE8A0BF),
     Color(0xFF636E72),
   ];
   const categoryIcons = <String, IconData>{

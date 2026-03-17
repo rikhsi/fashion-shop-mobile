@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_text_styles.dart';
 
 /// Строка label — value (для итогов, деталей заказа)
