@@ -5,6 +5,7 @@ import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/l10n/app_localizations.dart';
 import '../../data/models/product_detail_model.dart';
+import 'fullscreen_gallery_page.dart';
 
 class AllReviewsPage extends StatelessWidget {
   final List<ReviewModel> reviews;
@@ -222,18 +223,34 @@ class _ReviewTile extends StatelessWidget {
                 scrollDirection: Axis.horizontal,
                 itemCount: review.images!.length,
                 separatorBuilder: (_, _) => const SizedBox(width: AppSpacing.sm),
-                itemBuilder: (_, i) => ClipRRect(
-                  borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
-                  child: Image.network(
-                    review.images![i],
-                    width: 80,
-                    height: 80,
-                    fit: BoxFit.cover,
-                    errorBuilder: (_, _, _) => Container(
+                itemBuilder: (_, i) => GestureDetector(
+                  onTap: () => Navigator.push(
+                    context,
+                    PageRouteBuilder(
+                      opaque: false,
+                      pageBuilder: (_, _, _) => FullscreenGalleryPage(
+                        images: review.images!,
+                        initialIndex: i,
+                      ),
+                      transitionsBuilder: (_, animation, _, child) =>
+                          FadeTransition(opacity: animation, child: child),
+                      transitionDuration: const Duration(milliseconds: 250),
+                      reverseTransitionDuration: const Duration(milliseconds: 200),
+                    ),
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+                    child: Image.network(
+                      review.images![i],
                       width: 80,
                       height: 80,
-                      color: scheme.outline.withValues(alpha: 0.3),
-                      child: Icon(Icons.broken_image_outlined, color: scheme.onSurfaceVariant),
+                      fit: BoxFit.cover,
+                      errorBuilder: (_, _, _) => Container(
+                        width: 80,
+                        height: 80,
+                        color: scheme.outline.withValues(alpha: 0.3),
+                        child: Icon(Icons.broken_image_outlined, color: scheme.onSurfaceVariant),
+                      ),
                     ),
                   ),
                 ),

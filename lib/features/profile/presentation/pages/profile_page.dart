@@ -273,6 +273,12 @@ class _MenuSection extends StatelessWidget {
           ),
           Divider(height: 0, color: scheme.outline),
           AppMenuTile(
+            icon: Icons.auto_awesome_outlined,
+            title: 'Try-On Photos',
+            onTap: () => context.push('/profile/tryon-photos'),
+          ),
+          Divider(height: 0, color: scheme.outline),
+          AppMenuTile(
             icon: Icons.settings_outlined,
             title: tr.settings,
             onTap: () => context.push('/profile/settings'),

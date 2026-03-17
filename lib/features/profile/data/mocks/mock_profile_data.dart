@@ -1,3 +1,4 @@
+import '../models/chat_message_model.dart';
 import '../models/chat_model.dart';
 import '../models/notification_model.dart';
 import '../models/order_model.dart';
@@ -17,6 +18,7 @@ abstract final class MockProfileData {
       total: 548000,
       itemCount: 2,
       trackingNumber: 'UZ1234567890',
+      paymentMethod: PaymentMethod.click,
       items: const [
         OrderItemModel(title: 'Silk Evening Blouse', price: 189000, imageUrl: '${_img}photo-1564257631407-4deb1f99d992?w=200&h=250&fit=crop'),
         OrderItemModel(title: 'Summer Maxi Dress', price: 349000, imageUrl: '${_img}photo-1572804013309-59a88b7e92f1?w=200&h=250&fit=crop'),
@@ -30,6 +32,7 @@ abstract final class MockProfileData {
       total: 459000,
       itemCount: 1,
       trackingNumber: 'UZ0987654321',
+      paymentMethod: PaymentMethod.payme,
       items: const [
         OrderItemModel(title: 'Designer Cocktail Dress', price: 459000, imageUrl: '${_img}photo-1515886657613-9f3515b0c78f?w=200&h=250&fit=crop'),
       ],
@@ -41,6 +44,7 @@ abstract final class MockProfileData {
       status: OrderStatus.processing,
       total: 897000,
       itemCount: 3,
+      paymentMethod: PaymentMethod.uzumBank,
       items: const [
         OrderItemModel(title: 'Air Max Sneakers', price: 459000, imageUrl: '${_img}photo-1542291026-7eec264c27ff?w=200&h=250&fit=crop'),
         OrderItemModel(title: 'Canvas Backpack', price: 189000, imageUrl: '${_img}photo-1553062407-98eeb64c6a62?w=200&h=250&fit=crop'),
@@ -54,6 +58,7 @@ abstract final class MockProfileData {
       status: OrderStatus.pending,
       total: 189000,
       itemCount: 1,
+      paymentMethod: PaymentMethod.paynet,
       items: const [
         OrderItemModel(title: 'Classic White T-Shirt', price: 189000, imageUrl: '${_img}photo-1521572163474-6864f9cf17ab?w=200&h=250&fit=crop'),
       ],
@@ -65,6 +70,7 @@ abstract final class MockProfileData {
       status: OrderStatus.cancelled,
       total: 299000,
       itemCount: 2,
+      paymentMethod: PaymentMethod.click,
       items: const [
         OrderItemModel(title: 'Summer Straw Hat', price: 89000, imageUrl: '${_img}photo-1575032617751-6ddec2089882?w=200&h=250&fit=crop'),
         OrderItemModel(title: 'Weekend Casual Set', price: 219000, imageUrl: '${_img}photo-1480455624313-e29b44bbfde1?w=200&h=250&fit=crop'),
@@ -108,6 +114,143 @@ abstract final class MockProfileData {
       time: DateTime.now().subtract(const Duration(days: 5)),
     ),
   ];
+
+  // ── Chat Messages ──
+
+  static final Map<String, List<ChatMessageModel>> chatMessages = {
+    'c1': [
+      ChatMessageModel(
+        id: 'm1',
+        text: 'Hi! I placed an order yesterday. When will it ship?',
+        time: DateTime.now().subtract(const Duration(hours: 4)),
+        sender: MessageSender.user,
+      ),
+      ChatMessageModel(
+        id: 'm2',
+        text: 'Hello! Let me check your order status.',
+        time: DateTime.now().subtract(const Duration(hours: 3, minutes: 50)),
+        sender: MessageSender.seller,
+        replyToId: 'm1',
+        replyToText: 'Hi! I placed an order yesterday. When will it ship?',
+        replyToSenderName: 'You',
+      ),
+      ChatMessageModel(
+        id: 'm3',
+        text: 'Your order #FS-2026002 has been processed and is being packed right now.',
+        time: DateTime.now().subtract(const Duration(hours: 3, minutes: 45)),
+        sender: MessageSender.seller,
+      ),
+      ChatMessageModel(
+        id: 'm4',
+        text: 'Great, thank you!',
+        time: DateTime.now().subtract(const Duration(hours: 3, minutes: 30)),
+        sender: MessageSender.user,
+      ),
+      ChatMessageModel(
+        id: 'm5',
+        text: 'Your order has been shipped! Track it now.',
+        time: DateTime.now().subtract(const Duration(hours: 2)),
+        sender: MessageSender.seller,
+        isRead: false,
+        attachmentUrl: '${_img}photo-1515886657613-9f3515b0c78f?w=400&h=400&fit=crop',
+        attachmentType: AttachmentType.image,
+      ),
+    ],
+    'c2': [
+      ChatMessageModel(
+        id: 'm6',
+        text: 'I received my order. The quality is amazing!',
+        time: DateTime.now().subtract(const Duration(days: 1, hours: 3)),
+        sender: MessageSender.user,
+        attachmentUrl: '${_img}photo-1564257631407-4deb1f99d992?w=400&h=400&fit=crop',
+        attachmentType: AttachmentType.image,
+      ),
+      ChatMessageModel(
+        id: 'm7',
+        text: 'Thank you for your purchase! Hope you enjoy it.',
+        time: DateTime.now().subtract(const Duration(days: 1)),
+        sender: MessageSender.seller,
+        replyToId: 'm6',
+        replyToText: 'I received my order. The quality is amazing!',
+        replyToSenderName: 'You',
+      ),
+    ],
+    'c3': [
+      ChatMessageModel(
+        id: 'm8',
+        text: 'Do you have size 42 in the white sneakers?',
+        time: DateTime.now().subtract(const Duration(days: 2, hours: 5)),
+        sender: MessageSender.user,
+      ),
+      ChatMessageModel(
+        id: 'm9',
+        text: 'Let me check the stock for you!',
+        time: DateTime.now().subtract(const Duration(days: 2, hours: 4)),
+        sender: MessageSender.seller,
+        replyToId: 'm8',
+        replyToText: 'Do you have size 42 in the white sneakers?',
+        replyToSenderName: 'You',
+      ),
+      ChatMessageModel(
+        id: 'm10',
+        text: 'Yes, size 42 is available. Would you like to order?',
+        time: DateTime.now().subtract(const Duration(days: 2, hours: 3)),
+        sender: MessageSender.seller,
+      ),
+      ChatMessageModel(
+        id: 'm11',
+        text: 'I\'ll think about it, thanks!',
+        time: DateTime.now().subtract(const Duration(days: 2, hours: 2)),
+        sender: MessageSender.user,
+      ),
+      ChatMessageModel(
+        id: 'm12',
+        text: 'We have new arrivals you might like! Check them out.',
+        time: DateTime.now().subtract(const Duration(days: 2)),
+        sender: MessageSender.seller,
+        isRead: false,
+      ),
+      ChatMessageModel(
+        id: 'm13',
+        text: 'Also, we have a 20% discount on all sneakers this week!',
+        time: DateTime.now().subtract(const Duration(days: 2)),
+        sender: MessageSender.seller,
+        isRead: false,
+      ),
+      ChatMessageModel(
+        id: 'm14',
+        text: '',
+        time: DateTime.now().subtract(const Duration(days: 2)),
+        sender: MessageSender.seller,
+        isRead: false,
+        attachmentUrl: 'size_chart.pdf',
+        attachmentType: AttachmentType.file,
+        attachmentName: 'Size Chart 2026.pdf',
+      ),
+    ],
+    'c4': [
+      ChatMessageModel(
+        id: 'm15',
+        text: 'Is the leather jacket from last month coming back?',
+        time: DateTime.now().subtract(const Duration(days: 3, hours: 6)),
+        sender: MessageSender.user,
+      ),
+      ChatMessageModel(
+        id: 'm16',
+        text: 'Your item is back in stock! Order now before it sells out.',
+        time: DateTime.now().subtract(const Duration(days: 3)),
+        sender: MessageSender.seller,
+      ),
+    ],
+    'c5': [
+      ChatMessageModel(
+        id: 'm17',
+        text: 'Hi! Can I help you with anything?',
+        time: DateTime.now().subtract(const Duration(days: 5)),
+        sender: MessageSender.seller,
+      ),
+    ],
+  };
 
   // ── Promo Codes ──
 
@@ -155,6 +298,9 @@ abstract final class MockProfileData {
       minPurchase: 500000,
       expiresAt: DateTime(2026, 2, 28),
       isUsed: true,
+      usedOnOrderNumber: 'FS-2026001',
+      usedAt: DateTime(2026, 2, 20),
+      savedAmount: 274000,
     ),
   ];
 

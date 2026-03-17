@@ -7,6 +7,9 @@ class PromoCodeModel {
   final double? minPurchase;
   final DateTime expiresAt;
   final bool isUsed;
+  final String? usedOnOrderNumber;
+  final DateTime? usedAt;
+  final double? savedAmount;
 
   const PromoCodeModel({
     required this.id,
@@ -17,6 +20,9 @@ class PromoCodeModel {
     this.minPurchase,
     required this.expiresAt,
     this.isUsed = false,
+    this.usedOnOrderNumber,
+    this.usedAt,
+    this.savedAmount,
   });
 
   bool get isExpired => expiresAt.isBefore(DateTime.now());

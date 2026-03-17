@@ -5,8 +5,10 @@ import '../../../../core/l10n/app_localizations.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_text_styles.dart';
+import '../../../../shared/animations/app_page_route.dart';
 import '../../data/mocks/mock_profile_data.dart';
 import '../../data/models/promo_code_model.dart';
+import 'promo_code_detail_page.dart';
 
 class MyPromoCodesPage extends StatelessWidget {
   const MyPromoCodesPage({super.key});
@@ -50,7 +52,12 @@ class _PromoCodeTile extends StatelessWidget {
     final scheme = Theme.of(context).colorScheme;
     final isActive = promo.isActive;
 
-    return AnimatedOpacity(
+    return GestureDetector(
+      onTap: () => Navigator.push(
+        context,
+        appSlideRoute(PromoCodeDetailPage(promo: promo, currency: currency)),
+      ),
+      child: AnimatedOpacity(
       duration: const Duration(milliseconds: 300),
       opacity: isActive ? 1.0 : 0.55,
       child: Container(
@@ -201,6 +208,7 @@ class _PromoCodeTile extends StatelessWidget {
             ),
           ],
         ),
+      ),
       ),
     );
   }

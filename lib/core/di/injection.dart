@@ -15,6 +15,7 @@ import '../../features/home/data/datasources/home_datasource.dart';
 import '../../features/home/data/datasources/home_mock_datasource.dart';
 import '../../features/home/data/repositories/home_repository.dart';
 import '../../features/profile/presentation/cubit/profile_cubit.dart';
+import '../../features/tryon/data/tryon_service.dart';
 import '../network/api_client.dart';
 import '../settings/app_settings_cubit.dart';
 
@@ -66,4 +67,7 @@ Future<void> initDependencies() async {
 
   // Catalog - API Service (swap MockCatalogApiService with real implementation later)
   sl.registerLazySingleton<CatalogApiService>(() => MockCatalogApiService());
+
+  // Try-On
+  sl.registerLazySingleton<TryOnService>(() => TryOnService());
 }

@@ -13,7 +13,9 @@ import '../../../favorites/data/favorites_service.dart';
 import '../../../home/data/models/card_model.dart';
 import '../../data/mocks/mock_product_detail.dart';
 import '../../data/models/product_detail_model.dart';
+import '../../../tryon/presentation/pages/tryon_page.dart';
 import 'all_reviews_page.dart';
+import 'fullscreen_gallery_page.dart';
 
 class ProductDetailPage extends StatefulWidget {
   final CardModel card;
@@ -171,58 +173,135 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     );
   }
 
+  void _openFullscreen(int index) {
+    Navigator.push(
+      context,
+      PageRouteBuilder(
+        opaque: false,
+        pageBuilder: (_, _, _) => FullscreenGalleryPage(
+          images: _activeGallery,
+          initialIndex: index,
+        ),
+        transitionsBuilder: (_, animation, _, child) => FadeTransition(
+          opacity: animation,
+          child: child,
+        ),
+        transitionDuration: const Duration(milliseconds: 250),
+        reverseTransitionDuration: const Duration(milliseconds: 200),
+      ),
+    );
+  }
+
   // ── Gallery ──
 
   Widget _buildGallery(ColorScheme scheme, bool isFav) {
     final gallery = _activeGallery;
+    const double mainImageHeight = 380;
+    const double thumbHeight = 72;
+    const double thumbWidth = 56;
 
     return SizedBox(
-      height: 420,
+      height: mainImageHeight + thumbHeight + AppSpacing.sm + AppSpacing.md,
       child: Stack(
         children: [
-          PageView.builder(
-            key: ValueKey(gallery.hashCode),
-            controller: _pageController,
-            itemCount: gallery.length,
-            onPageChanged: (i) => setState(() => _currentImage = i),
-            itemBuilder: (_, i) => Image.network(
-              gallery[i],
-              fit: BoxFit.cover,
-              loadingBuilder: (_, child, progress) {
-                if (progress == null) return child;
-                return Container(
-                  color: scheme.surfaceContainerHighest,
-                  child: const Center(child: CircularProgressIndicator(strokeWidth: 2)),
-                );
-              },
-              errorBuilder: (_, _, _) => Container(
-                color: scheme.surfaceContainerHighest,
-                child: Icon(Icons.image_not_supported_outlined, size: 48, color: scheme.onSurfaceVariant),
-              ),
-            ),
-          ),
-          Positioned(
-            bottom: AppSpacing.base,
-            left: 0,
-            right: 0,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(
-                gallery.length,
-                (i) => AnimatedContainer(
-                  duration: const Duration(milliseconds: 250),
-                  margin: const EdgeInsets.symmetric(horizontal: 3),
-                  width: i == _currentImage ? 24 : 8,
-                  height: 8,
-                  decoration: BoxDecoration(
-                    color: i == _currentImage
-                        ? scheme.primary
-                        : scheme.onSurface.withValues(alpha: 0.25),
-                    borderRadius: BorderRadius.circular(4),
+          Column(
+            children: [
+              GestureDetector(
+                onTap: () => _openFullscreen(_currentImage),
+                child: SizedBox(
+                  height: mainImageHeight,
+                  width: double.infinity,
+                  child: PageView.builder(
+                    key: ValueKey(gallery.hashCode),
+                    controller: _pageController,
+                    itemCount: gallery.length,
+                    onPageChanged: (i) => setState(() => _currentImage = i),
+                    itemBuilder: (_, i) => Image.network(
+                      gallery[i],
+                      fit: BoxFit.cover,
+                      loadingBuilder: (_, child, progress) {
+                        if (progress == null) return child;
+                        return Container(
+                          color: scheme.surfaceContainerHighest,
+                          child: const Center(
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          ),
+                        );
+                      },
+                      errorBuilder: (_, _, _) => Container(
+                        color: scheme.surfaceContainerHighest,
+                        child: Icon(
+                          Icons.image_not_supported_outlined,
+                          size: 48,
+                          color: scheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ),
                   ),
                 ),
               ),
-            ),
+              const SizedBox(height: AppSpacing.sm),
+              if (gallery.length > 1)
+                SizedBox(
+                  height: thumbHeight,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppSpacing.base,
+                    ),
+                    child: ListView.separated(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: gallery.length,
+                      separatorBuilder: (_, _) =>
+                          const SizedBox(width: AppSpacing.sm),
+                      itemBuilder: (_, i) {
+                        final isActive = i == _currentImage;
+                        return GestureDetector(
+                          onTap: () {
+                            _pageController.animateToPage(
+                              i,
+                              duration: const Duration(milliseconds: 300),
+                              curve: Curves.easeInOut,
+                            );
+                          },
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 200),
+                            width: thumbWidth,
+                            height: thumbHeight,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(
+                                AppSpacing.radiusSm,
+                              ),
+                              border: Border.all(
+                                color: isActive
+                                    ? scheme.primary
+                                    : scheme.outline,
+                                width: isActive ? 2 : 1,
+                              ),
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(
+                                AppSpacing.radiusSm - 1,
+                              ),
+                              child: Image.network(
+                                gallery[i],
+                                fit: BoxFit.cover,
+                                errorBuilder: (_, _, _) => Container(
+                                  color: scheme.surfaceContainerHighest,
+                                  child: Icon(
+                                    Icons.image_outlined,
+                                    size: 16,
+                                    color: scheme.onSurfaceVariant,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+            ],
           ),
           Positioned(
             top: AppSpacing.base,
@@ -602,7 +681,40 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
               isFavorite: isFav,
               onTap: () => _favorites.toggle(_detail.id),
             ),
-            const SizedBox(width: AppSpacing.md),
+            const SizedBox(width: AppSpacing.sm),
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  appSlideRoute(
+                    TryOnPage(
+                      productTitle: _detail.title,
+                      productImageUrl: _activeGallery.first,
+                    ),
+                  ),
+                );
+              },
+              child: Container(
+                height: AppSpacing.buttonHeight,
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+                  border: Border.all(color: scheme.primary),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.auto_awesome_rounded, size: 18, color: scheme.primary),
+                    const SizedBox(width: 6),
+                    Text(
+                      'Try On',
+                      style: AppTextStyles.labelMedium.copyWith(color: scheme.primary),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(width: AppSpacing.sm),
             Expanded(
               child: SizedBox(
                 height: AppSpacing.buttonHeight,
@@ -793,13 +905,29 @@ class _ReviewCard extends StatelessWidget {
                 scrollDirection: Axis.horizontal,
                 itemCount: review.images!.length,
                 separatorBuilder: (_, _) => const SizedBox(width: AppSpacing.sm),
-                itemBuilder: (_, i) => ClipRRect(
-                  borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
-                  child: Image.network(
-                    review.images![i],
-                    width: 64,
-                    height: 64,
-                    fit: BoxFit.cover,
+                itemBuilder: (_, i) => GestureDetector(
+                  onTap: () => Navigator.push(
+                    context,
+                    PageRouteBuilder(
+                      opaque: false,
+                      pageBuilder: (_, _, _) => FullscreenGalleryPage(
+                        images: review.images!,
+                        initialIndex: i,
+                      ),
+                      transitionsBuilder: (_, animation, _, child) =>
+                          FadeTransition(opacity: animation, child: child),
+                      transitionDuration: const Duration(milliseconds: 250),
+                      reverseTransitionDuration: const Duration(milliseconds: 200),
+                    ),
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+                    child: Image.network(
+                      review.images![i],
+                      width: 64,
+                      height: 64,
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
               ),

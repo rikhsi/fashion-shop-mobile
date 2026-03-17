@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import '../../../../core/l10n/app_localizations.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_text_styles.dart';
+import '../../../../shared/animations/app_page_route.dart';
 import '../../data/mocks/mock_profile_data.dart';
 import '../../data/models/chat_model.dart';
+import 'chat_conversation_page.dart';
 
 class MyChatsPage extends StatelessWidget {
   const MyChatsPage({super.key});
@@ -45,7 +47,10 @@ class _ChatTile extends StatelessWidget {
     final hasUnread = chat.unreadCount > 0;
 
     return InkWell(
-      onTap: () {},
+      onTap: () => Navigator.push(
+        context,
+        appSlideRoute(ChatConversationPage(chat: chat)),
+      ),
       child: Padding(
         padding: const EdgeInsets.symmetric(
           horizontal: AppSpacing.base,

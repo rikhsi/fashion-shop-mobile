@@ -4,8 +4,10 @@ import '../../../../core/l10n/app_localizations.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_text_styles.dart';
+import '../../../../shared/animations/app_page_route.dart';
 import '../../data/mocks/mock_profile_data.dart';
 import '../../data/models/notification_model.dart';
+import 'notification_detail_page.dart';
 
 class NotificationsPage extends StatelessWidget {
   const NotificationsPage({super.key});
@@ -47,7 +49,10 @@ class _NotificationTile extends StatelessWidget {
     final (icon, color) = _typeVisuals(notification.type);
 
     return InkWell(
-      onTap: () {},
+      onTap: () => Navigator.push(
+        context,
+        appSlideRoute(NotificationDetailPage(notification: notification)),
+      ),
       child: Container(
         color: notification.isRead
             ? Colors.transparent

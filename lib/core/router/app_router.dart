@@ -13,7 +13,9 @@ import '../../features/profile/presentation/pages/notifications_page.dart';
 import '../../features/profile/presentation/pages/profile_edit_page.dart';
 import '../../features/profile/presentation/pages/profile_menu_destination_page.dart';
 import '../../features/profile/presentation/pages/profile_page.dart';
+import '../../features/profile/presentation/pages/settings_page.dart';
 import '../../features/shell/presentation/pages/shell_page.dart';
+import '../../features/tryon/presentation/pages/tryon_photos_page.dart';
 import '../../features/wishlist/presentation/pages/wishlist_page.dart';
 
 class AppRouter {
@@ -89,15 +91,17 @@ class AppRouter {
       GoRoute(
         path: '/profile/settings',
         name: 'profile-settings',
-        builder: (context, state) => const ProfileMenuDestinationPage(
-          title: 'Settings',
-          icon: Icons.settings_outlined,
-        ),
+        builder: (context, state) => const SettingsPage(),
       ),
       GoRoute(
         path: '/profile/contact',
         name: 'profile-contact',
         builder: (context, state) => const ContactUsPage(),
+      ),
+      GoRoute(
+        path: '/profile/tryon-photos',
+        name: 'profile-tryon-photos',
+        builder: (context, state) => const TryOnPhotosPage(),
       ),
     ],
   );
